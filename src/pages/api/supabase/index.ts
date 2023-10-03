@@ -1,12 +1,10 @@
-import { supabase, getGroups } from "../../supabase";
+import { supabase, getGroups } from "../../../db/supabase";
 
 // const {data} = await supabase.rpc("draw_name", {groupid: group.id, username: userName}).single()
 
 export async function GET({}) {
 //   const { data, error: groupError } = await supabase.from("groups").select("*");
 const data = await getGroups()
-console.log("my data")
-console.log(JSON.stringify(data))
 
 //   if (groupError) {
 //     console.error(groupError);

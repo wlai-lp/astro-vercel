@@ -6,6 +6,6 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
 export const getGroups = async () => {
   const { data, error: groupError } = await supabase.from("groups").select("*");
-  console.log(JSON.stringify(data));
   return data;
 }
+
