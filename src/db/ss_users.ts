@@ -2,11 +2,11 @@
 import { supabase } from "./supabase";
 import type { Database, Tables } from "./types";
 
-export const addUser = async (ss_insert: Tables<"ss_users">) => {
-  console.log(ss_insert.name);
+export const addUser = async (user: Tables<"ss_users">) => {
+  console.log(user.name);
   const { data, error: groupError } = await supabase
     .from("ss_users")
-    .insert(ss_insert)
+    .insert(user)
     .select();
 
   if (!data) {
@@ -21,12 +21,12 @@ export const addUser = async (ss_insert: Tables<"ss_users">) => {
   return data;
 };
 
-export const updateUser = async (ss_insert: Tables<"ss_users">) => {
-    console.log(ss_insert.name);
+export const updateUser = async (user: Tables<"ss_users">) => {
+    console.log(user.name);
     const { data, error: groupError } = await supabase
       .from("ss_users")
-      .update(ss_insert)
-      .eq('id', ss_insert.id)
+      .update(user)
+      .eq('id', user.id)
       .select();
   
     if (!data) {
@@ -41,3 +41,21 @@ export const updateUser = async (ss_insert: Tables<"ss_users">) => {
     return data;
   };
   
+  export const deleteUser = async (user: Tables<"ss_users">) => {
+    console.log(user.name);
+    const { data, error: groupError } = await supabase
+      .from("ss_users")
+      .delete()
+      .eq('id', user.id)
+  
+    if (!data) {
+      console.error("No data returned");
+    }
+  
+    if (groupError) {
+      console.log("error " + groupError.message);
+    }
+    console.log(JSON.stringify(data));
+  
+    return data;
+  };
