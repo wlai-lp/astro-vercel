@@ -1,0 +1,18 @@
+---
+// Usage: <GreetingHeadline greeting="Howdy" name="Partner" />
+// NOTE: Astro.props becomes assible set/get
+// usage 1:
+const { greeting, name } = Astro.props;
+
+// usage 2: use interface for typescript
+// interface Props {
+//   name: string;
+//   greeting?: string;
+// }
+
+// usage 3: provide default values
+// const { greeting = "Hello", name } = Astro.props;
+
+
+---
+<h2>{greeting}, {name}!</h2>
