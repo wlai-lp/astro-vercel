@@ -4,8 +4,6 @@ export const GET: APIRoute = async ({ request }) => {
   console.log(request.method);
   
   const apiUrl = import.meta.env.SS_API_ENDPOINT + "?include=favorites";
-  const apiFavUrl =
-    "https://app.smartsheet.com/2.0/internal/favorites?include=name,directId&includeAll=true";
   const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
 
   const headers = new Headers({
