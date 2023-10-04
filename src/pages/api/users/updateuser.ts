@@ -14,10 +14,10 @@ export const PATCH: APIRoute = async ({ request }) => {
   // payload is already a parsed json
   console.log(payload.api_key);
   //   const data = JSON.parse(payload)// as IAddUserType;
-  const createdUser = await updateUser(payload);
+  const user = await updateUser(payload);
 
-  return new Response(JSON.stringify({ createdUser }), {
-    status: 201,
+  return new Response(JSON.stringify({ user }), {
+    status: 200,
     headers: {
       "Content-Type": "application/json",
     },

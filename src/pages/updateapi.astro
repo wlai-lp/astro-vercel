@@ -2,28 +2,81 @@
 import GreetingCard from "../components/GreetingCard.astro";
 import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
+const showme_url = "https://app.tango.us/app/workflow/Managing-API-Access-in-Smartsheet-d2f1f18106ce49808951856acfb449e6"
 ---
 
-<!-- <html data-theme="dark"> -->
-
-
-  <!-- Content you want to center -->
-  <Layout title="tailwind stuff">
-    
-      
-    
-
-    <div class="card w-96 bg-primary text-primary-content">
-      <div class="card-body">
-        <h2 class="card-title">Update API Key!</h2>
-        <input type="text" placeholder="SmartSheet API Key" class="input input-bordered input-warning w-full max-w-xs" />
-        <div class="card-actions justify-end">
-          <button class="btn">How?</button>
-          <button class="btn">Update</button>
+<!-- <html data-theme="dark"> --><!-- Content you want to center -->
+<Layout title="tailwind stuff">
+  <div class="card w-96 bg-primary text-primary-content">
+    <div class="card-body">
+      <h2 class="card-title">Update API Key!</h2>
+      <input
+        id="api_key_val"
+        type="text"
+        placeholder="SmartSheet API Key"
+        class="input input-bordered input-warning w-full max-w-xs"
+      />
+      <div class="card-actions justify-end">
+        <button class="btn" onclick="window.open('https:\/\/tinyurl.com\/2d4mvej8', '_blank')">How?</button>
+        <button data-update-api class="btn">Update</button>
+      </div>
+    </div>
+    <!-- <iframe src="https://app.tango.us/app/embed/d2f1f181-06ce-4980-8951-856acfb449e6" sandbox="allow-scripts allow-top-navigation-by-user-activation allow-popups allow-same-origin" security="restricted" title="Managing API Access in Smartsheet" width="100%" height="100%" referrerpolicy="strict-origin-when-cross-origin" frameborder="0" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" allowfullscreen="allowfullscreen"></iframe> -->
+    <dialog id="my_modal_1" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Hello!</h3>
+        <p class="py-4">Press ESC key or click the button below to close</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+          </form>
         </div>
       </div>
-      <!-- <iframe src="https://app.tango.us/app/embed/d2f1f181-06ce-4980-8951-856acfb449e6" sandbox="allow-scripts allow-top-navigation-by-user-activation allow-popups allow-same-origin" security="restricted" title="Managing API Access in Smartsheet" width="100%" height="100%" referrerpolicy="strict-origin-when-cross-origin" frameborder="0" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" allowfullscreen="allowfullscreen"></iframe> -->
-    </div>
-  </Layout>
-  
-<!-- </html> -->
+    </dialog>
+  </div>
+</Layout>
+
+<script>
+  const buttons = document.querySelectorAll("[data-update-api]");
+
+  // Handle clicks on each button.
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      // alert("Button was clicked!");
+      // fetch('https://jsonplaceholder.typicode.com/todos/1')
+      // const response = await fetch("/api/smartsheet/getfavsmartsheets");
+
+      // get the api key value
+      // debugger;
+
+      // const val = document.querySelector("#api_key_val");
+      const inputElement = document.getElementById('api_key_val') as HTMLInputElement;
+
+      // TODO: validation?
+
+      const update_api_url = "/api/users/updateuser";
+      // Define headers for the request (optional)
+      const headers = {
+        "Content-Type": "application/json", // Set the content type to JSON
+        // Add any other headers you need here
+      };
+      // payload
+      const data = {
+        id: 10,
+        api_key: inputElement.value,
+      };
+      // fetch post call
+      const response = await fetch(update_api_url, {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify(data), // Convert data to JSON string
+      });
+      // fetch("/api/users/updateuser");
+      const result = await response.json();
+      console.log(result);
+      // window.history.back();
+      // todo: many a notification to alert api status update?
+    });
+  });
+</script>
