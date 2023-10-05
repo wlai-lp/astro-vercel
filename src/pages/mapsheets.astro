@@ -1,0 +1,133 @@
+---
+import type { GetStaticPaths } from "astro";
+import GreetingCard from "../components/GreetingCard.astro";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+// import { request } from Astro.request;
+
+// TODO: better to get user id and perfrom api call to get data directly
+console.log(Astro.request.url);
+// console.log(request.export const getStaticPaths = (() => {
+
+//     return [];
+// }) satisfies GetStaticPaths;)
+---
+
+<!-- <html data-theme="dark"> --><!-- Content you want to center -->
+<Layout title="tailwind stuff">
+  <div id="replaceMe">
+    <td colspan="3">
+      <button
+        class="btn"
+        hx-get="/api/smartsheet/htmxgetfields"
+        hx-target="#replaceMe"
+        hx-swap="outerHTML"
+      >
+      click me</button>
+    </td>
+  </div>
+
+  <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
+<p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
+  <div class="card w-96 bg-primary text-primary-content">
+    <div class="card-body">
+      <h2 class="card-title">Map Sheets</h2>
+      <select name="source"  class="select select-secondary w-full max-w-xs" hx-get="/api/smartsheet/htmxgetfields" hx-target="#keyfields" hx-indicator=".htmx-indicator">
+        <option disabled selected>Select Source Sheet</option>
+        <option value="5846294639628164">my source sheet</option>
+      </select>
+      <select id="keyfields" class="select select-secondary w-full max-w-xs">
+        <option disabled selected>Select trigger field</option>
+      </select>
+      <select class="select select-secondary w-full max-w-xs">
+        <option disabled selected>Select Destination Sheet</option>
+      </select>
+      <div class="card-actions justify-end">
+        <button
+          class="btn"
+          onclick="
+          window.open('https:\/\/tinyurl.com\/2d4mvej8', '_blank')
+          "
+          >How?</button
+        >
+        <button data-update-api class="btn">Update</button>
+      </div>
+    </div>
+    <!-- <iframe src="https://app.tango.us/app/embed/d2f1f181-06ce-4980-8951-856acfb449e6" sandbox="allow-scripts allow-top-navigation-by-user-activation allow-popups allow-same-origin" security="restricted" title="Managing API Access in Smartsheet" width="100%" height="100%" referrerpolicy="strict-origin-when-cross-origin" frameborder="0" webkitallowfullscreen="webkitallowfullscreen" mozallowfullscreen="mozallowfullscreen" allowfullscreen="allowfullscreen"></iframe> -->
+    <dialog id="my_modal_1" class="modal">
+      <div class="modal-box">
+        <h3 class="font-bold text-lg">Hello!</h3>
+        <p class="py-4">Press ESC key or click the button below to close</p>
+        <div class="modal-action">
+          <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn">Close</button>
+          </form>
+        </div>
+      </div>
+    </dialog>
+  </div>
+</Layout>
+<script
+  src="https://unpkg.com/htmx.org@1.9.6"
+  integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+  crossorigin="anonymous"></script>
+<script>
+  window.onload = async () => {
+    console.log("window loaded");
+    const url = "/api/smartsheet/getfavsmartsheets";
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const result = await response.json();
+    console.log(result);
+
+    // add elements
+  };
+
+  const buttons = document.querySelectorAll("[data-update-api]");
+
+  // Handle clicks on each button.
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      // alert("Button was clicked!");
+      // fetch('https://jsonplaceholder.typicode.com/todos/1')
+      // const response = await fetch("/api/smartsheet/getfavsmartsheets");
+
+      // get the api key value
+      // debugger;
+
+      // const val = document.querySelector("#api_key_val");
+      const inputElement = document.getElementById(
+        "api_key_val"
+      ) as HTMLInputElement;
+
+      // TODO: validation?
+
+      const update_api_url = "/api/users/updateuser";
+      // Define headers for the request (optional)
+      const headers = {
+        "Content-Type": "application/json", // Set the content type to JSON
+        // Add any other headers you need here
+      };
+      // payload
+      const data = {
+        id: 10,
+        api_key: inputElement.value,
+      };
+      // fetch post call
+      const response = await fetch(update_api_url, {
+        method: "PATCH",
+        headers: headers,
+        body: JSON.stringify(data), // Convert data to JSON string
+      });
+      // fetch("/api/users/updateuser");
+      const result = await response.json();
+      console.log(result);
+      // window.history.back();
+      // todo: many a notification to alert api status update?
+    });
+  });
+</script>
