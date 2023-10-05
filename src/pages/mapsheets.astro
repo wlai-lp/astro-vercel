@@ -23,7 +23,8 @@ console.log(Astro.request.url);
         hx-target="#replaceMe"
         hx-swap="outerHTML"
       >
-      click me</button>
+        click me</button
+      >
     </td>
   </div>
 
@@ -32,14 +33,21 @@ console.log(Astro.request.url);
   <div class="card w-96 bg-primary text-primary-content">
     <div class="card-body">
       <h2 class="card-title">Map Sheets</h2>
-      <select name="source"  class="select select-secondary w-full max-w-xs" hx-get="/api/smartsheet/htmxgetfields" hx-target="#keyfields" hx-indicator=".htmx-indicator">
+      <select
+        id="sourceSelect"
+        name="source"
+        class="select select-secondary w-full max-w-xs"
+        hx-get="/api/smartsheet/htmxgetfields"
+        hx-target="#keyfields"
+        hx-indicator=".htmx-indicator"
+      >
         <option disabled selected>Select Source Sheet</option>
-        <option value="5846294639628164">my source sheet</option>
+        <!-- <option value="5846294639628164">my source sheet</option> -->
       </select>
       <select id="keyfields" class="select select-secondary w-full max-w-xs">
         <option disabled selected>Select trigger field</option>
       </select>
-      <select class="select select-secondary w-full max-w-xs">
+      <select id="destSelect" class="select select-secondary w-full max-w-xs">
         <option disabled selected>Select Destination Sheet</option>
       </select>
       <div class="card-actions justify-end">
@@ -82,9 +90,31 @@ console.log(Astro.request.url);
       headers: { "Content-Type": "application/json" },
     });
     const result = await response.json();
-    console.log(result);
+    console.log(result.data);
+
+    interface Ioption {
+      id: string;
+      name: string;
+    }
 
     // add elements
+    const sourceElement = document.getElementById("sourceSelect");
+    const destElement = document.getElementById("destSelect");
+
+    result.data.forEach((optionInfo) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = optionInfo.id; // Set the value attribute
+      optionElement.text = optionInfo.name; // Set the text content
+
+      const optionElement2 = document.createElement("option");
+      optionElement2.value = optionInfo.id; // Set the value attribute
+      optionElement2.text = optionInfo.name; // Set the text content
+
+      // Append the option to the <select> element
+      destElement!.appendChild(optionElement);
+      sourceElement!.appendChild(optionElement2);
+      console.log("create options");
+    });
   };
 
   const buttons = document.querySelectorAll("[data-update-api]");
