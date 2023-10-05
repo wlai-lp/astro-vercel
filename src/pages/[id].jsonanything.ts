@@ -1,3 +1,8 @@
+
+
+const supabaseUrl = import.meta.env.KV_REST_API_READ_ONLY_TOKEN
+console.log(supabaseUrl)
+
 export async function GET({ }) {
   // const id = params.id;
   

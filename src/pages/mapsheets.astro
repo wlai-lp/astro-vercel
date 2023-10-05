@@ -14,7 +14,7 @@ console.log(Astro.request.url);
 ---
 
 <!-- <html data-theme="dark"> --><!-- Content you want to center -->
-<Layout title="tailwind stuff">
+<Layout title="Map Sheets">
   <div id="replaceMe">
     <td colspan="3">
       <button
@@ -76,10 +76,7 @@ console.log(Astro.request.url);
     </dialog>
   </div>
 </Layout>
-<script
-  src="https://unpkg.com/htmx.org@1.9.6"
-  integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
-  crossorigin="anonymous"></script>
+
 <script>
   window.onload = async () => {
     console.log("window loaded");
@@ -92,16 +89,16 @@ console.log(Astro.request.url);
     const result = await response.json();
     console.log(result.data);
 
-    interface Ioption {
-      id: string;
-      name: string;
-    }
-
     // add elements
     const sourceElement = document.getElementById("sourceSelect");
     const destElement = document.getElementById("destSelect");
 
-    result.data.forEach((optionInfo) => {
+    type OptionInfo = {
+      id: string;
+      name: string;
+    };
+    const optionInfos: OptionInfo[] = result.data;
+    optionInfos.forEach((optionInfo) => {
       const optionElement = document.createElement("option");
       optionElement.value = optionInfo.id; // Set the value attribute
       optionElement.text = optionInfo.name; // Set the text content
