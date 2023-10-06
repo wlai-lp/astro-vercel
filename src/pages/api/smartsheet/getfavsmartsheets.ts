@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { FetchData as fetchData, CacheFav } from "../vercelkv";
+import { CacheFav } from "../vercelkv";
 
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.method);
@@ -14,33 +14,33 @@ export const GET: APIRoute = async ({ request }) => {
     const intersection: Sheet[] = sheetDataArray.filter((obj1) =>
       favDataArray.some((obj2) => obj2.name === obj1.name)
     );
-    
+
     try {
       CacheFav(intersection);
     } catch (e) {}
     return intersection;
   }
 
-  // async function fetchData(url: string): Promise<string> {
-  //   const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
+  async function fetchData(url: string): Promise<string> {
+    const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
 
-  //   const headers = new Headers({
-  //     Authorization: `Bearer ${token}`,
-  //     "Content-Type": "application/json", // Adjust the content type as needed
-  //   });
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json", // Adjust the content type as needed
+    });
 
-  //   const requestOptions = {
-  //     method: "GET", // HTTP method (e.g., GET, POST, PUT, DELETE)
-  //     headers: headers,
-  //   };
+    const requestOptions = {
+      method: "GET", // HTTP method (e.g., GET, POST, PUT, DELETE)
+      headers: headers,
+    };
 
-  //   return fetch(url, requestOptions).then((response) => {
-  //     if (!response.ok) {
-  //       throw new Error(`Network response was not ok`);
-  //     }
-  //     return response.json();
-  //   });
-  // }
+    return fetch(url, requestOptions).then((response) => {
+      if (!response.ok) {
+        throw new Error(`Network response was not ok`);
+      }
+      return response.json();
+    });
+  }
 
   const apiUrl = import.meta.env.SS_API_ENDPOINT + "?includeAll=true";
   const apiFavUrl =

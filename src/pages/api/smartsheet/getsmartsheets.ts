@@ -1,22 +1,23 @@
 import type { APIRoute } from "astro";
+import { getSsRequestOptions } from "../../util/fetchOptions";
 
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.method);
   
   const apiUrl = import.meta.env.SS_API_ENDPOINT + "?include=favorites";
-  const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
+  // const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
 
-  const headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json", // Adjust the content type as needed
-  });
+  // const headers = new Headers({
+  //   Authorization: `Bearer ${token}`,
+  //   "Content-Type": "application/json", // Adjust the content type as needed
+  // });
 
-  const requestOptions = {
-    method: "GET", // HTTP method (e.g., GET, POST, PUT, DELETE)
-    headers: headers,
-  };
+  // const requestOptions = {
+  //   method: "GET", // HTTP method (e.g., GET, POST, PUT, DELETE)
+  //   headers: headers,
+  // };
   // const res = await fetch('https://reqres.in/api/users?page=2')
-  const res = await fetch(apiUrl, requestOptions);
+  const res = await fetch(apiUrl, getSsRequestOptions());
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
