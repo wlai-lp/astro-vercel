@@ -16,18 +16,21 @@ console.log(Astro.request.url);
 <!-- <html data-theme="dark"> --><!-- Content you want to center -->
 <Layout title="Map Sheets">
   <!-- htmx demo -->
-  <!-- <div id="replaceMe">
+  <div id="replaceMe">
     <td colspan="3">
       <button
+        name="htmxbutton"
+        value="htmxbutton-valuexxx"
         class="btn"
-        hx-get="/api/smartsheet/htmxgetfields"
+        hx-post="/api/htmx/test"
         hx-target="#replaceMe"
         hx-swap="outerHTML"
       >
         click me</button
       >
     </td>
-  </div> -->
+  </div>
+  <!-- end htmx demo -->
 
   <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
 <p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
