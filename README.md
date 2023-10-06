@@ -3,6 +3,11 @@
 ```sh
 npm create astro@latest -- --template basics
 ```
+```
+supabase db type ten
+npx supabase gen types typescript --project-id dxgzznhilijrdqcvxrdw --schema public > ./src/db/types.ts 
+```
+
 
 [![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/basics)
 [![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/basics)

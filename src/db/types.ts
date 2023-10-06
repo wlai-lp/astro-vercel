@@ -189,19 +189,16 @@ export interface Database {
       ss_sheets: {
         Row: {
           created_at: string
-          id: number
           name: string | null
           ss_id: string
         }
         Insert: {
           created_at?: string
-          id?: never
           name?: string | null
           ss_id: string
         }
         Update: {
           created_at?: string
-          id?: never
           name?: string | null
           ss_id?: string
         }
@@ -273,5 +270,5 @@ export interface Database {
     }
   }
 }
-// After 😍
+
 export type Tables<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row']
