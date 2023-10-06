@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { addSheet, selectSheet } from "../../db/ss_sheets";
 import type { Tables } from "../../db/types";
+import { GetSheetNameByID } from "./vercelkv";
 
 // note: used by sheet mapping page to perform htmx update
 // htmx posts to this page
@@ -30,6 +31,9 @@ export const GET: APIRoute = async ({ request }) => {
   const hasSourceSheet = await selectSheet(sourceSheet);
   if(hasSourceSheet?.length == 0){
     console.log("no sheet id in db, create one");
+    const sheetName = await GetSheetNameByID(sourceSheet.ss_id)
+    console.log(" 🚀 " + sheetName)
+    sourceSheet.name = sheetName.result
     const addSourceSheet = await addSheet(sourceSheet)
   }
 

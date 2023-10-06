@@ -49,4 +49,11 @@ export async function CacheFav(intersection: Sheet[]) {
   } catch (error) {}
 }
 
-export async function GetSheetNameByID(sheetId: string) {}
+export async function GetSheetNameByID(sheetId: string) {
+  try {
+    const url = `${kvendpoint}/get/sheet${sheetId}/`;
+    const data = await fetch(url, kvrequestOptions);
+    return data.json()
+  } catch (error) {}
+}
+
