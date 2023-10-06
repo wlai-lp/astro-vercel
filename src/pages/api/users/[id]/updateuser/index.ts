@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { updateUser } from "../../../../../db/ss_users";
 import type { Tables } from "../../../../../db/types";
 
+// #REF: astro read regular request payload using async request.json()
 export const POST: APIRoute = async ({ request }) => {
   console.log(request.method);
   //   console.log(await request.json());
