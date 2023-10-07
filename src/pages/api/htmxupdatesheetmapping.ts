@@ -1,119 +1,120 @@
 import type { APIRoute } from "astro";
 import { addSheet, selectSheet } from "../../db/ss_sheets";
-import type { Tables } from "../../db/types";
+import { addColumn, selectColumn } from "../../db/ss_columns";
+import { addSheetMapping } from "../../db/ss_sheet_mappings";
+import type { Database, Tables } from "../../db/types";
 import { GetSheetNameByID } from "./vercelkv";
 
 // note: used by sheet mapping page to perform htmx update
 // htmx posts to this page
 // logic:
-// get post payload, select from sheet table by id
-// if no results the create a new table
+// 1. get post payload, select from sheet table by id
+// 2. if no results the create a new table
+// 3. do the same for column
+// TODO 4. create webhook
+// TODO 5. init webhook request
+// TODO 6. update webhook table
+// 7. create sheet mapping table
 
-export const GET: APIRoute = async ({ request }) => {
-  const url = new URL(request.url);
-  const sourceSheetId = url.searchParams.get("source");
-  const destSheetId = url.searchParams.get("dest");
-  const userId = url.searchParams.get("userid");
-  console.log(sourceSheetId);
-
-  let sourceSheet: Tables<"ss_sheets"> = {
+function getSheet(reqUrl: string, name: string) {
+  const url = new URL(reqUrl);
+  const sourceSheetId = url.searchParams.get(name);
+  const sheet: Tables<"ss_sheets"> = {
     created_at: new Date().toISOString(),
     name: "",
     ss_id: sourceSheetId!,
   };
 
-  let destSheet = {
-    created_at: "",
-    name: "",
-    ss_id: "",
+  return sheet;
+}
+
+function getColumn(reqUrl: string, name: string) {
+  const url = new URL(reqUrl);
+  const keycolumnssid = url.searchParams.get(name);
+  const column: Tables<"ss_columns"> = {
+    created_at: new Date().toISOString(),
+    id: 0,
+    name: "place holder name",
+    ss_id: keycolumnssid!,
   };
 
-  const hasSourceSheet = await selectSheet(sourceSheet);
-  if(hasSourceSheet?.length == 0){
+  return column;
+}
+
+async function syncColumn(column: Tables<"ss_columns">) {
+  const hasColumn = await selectColumn(column);
+  if (hasColumn?.length == 0) {
+    console.log("no column id in db, create one");
+    // todo
+    // const columnName = await GetSheetNameByID(column.ss_id);
+    // console.log(" 🚀 " + columnName);
+    column.name = "place holder";
+    const addSourceSheet = await addColumn(column);
+  }
+}
+
+async function syncSheet(sheet: Tables<"ss_sheets">) {
+  const hasSheet = await selectSheet(sheet);
+  if (hasSheet?.length == 0) {
     console.log("no sheet id in db, create one");
-    const sheetName = await GetSheetNameByID(sourceSheet.ss_id)
-    console.log(" 🚀 " + sheetName)
-    sourceSheet.name = sheetName.result
-    const addSourceSheet = await addSheet(sourceSheet)
+    const sheetName = await GetSheetNameByID(sheet.ss_id);
+    console.log(" 🚀 " + sheetName);
+    sheet.name = sheetName.result;
+    const addSourceSheet = await addSheet(sheet);
   }
+}
 
-  sourceSheet.ss_id = sourceSheetId!;
-
-  if (!sourceSheetId) {
-    console.log("no source id");
-    return new Response(`<option></option>`, {
-      status: 200,
-      headers: {
-        "Content-Type": "text/html",
-      },
-    });
-  }
-
-  const apiUrl =
-    "https://api.smartsheet.com/2.0/sheets/" + sourceSheetId + "/columns";
-    console.log(" 🚀🚀 " + JSON.stringify(import.meta.env))
-  const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
-
-  const headers = new Headers({
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json", // Adjust the content type as needed
-  });
-
-  const requestOptions = {
-    method: "GET", // HTTP method (e.g., GET, POST, PUT, DELETE)
-    headers: headers,
+async function addToSheetMapping(
+  source: string,
+  dest: string,
+  trigger: string
+) {
+  console.log('🚀 column id = ' + trigger)
+  const sheetMapping: Database['public']['Tables']['ss_sheet_mappings']['Insert'] = {
+    created_at: new Date().toISOString(),
+    dest_id: dest,
+    source_id: source,
+    source_trigger_column_id: trigger,
+    user_id: 10,
+    webhook_established: false,
+    webhook_id: "0",
   };
+  addSheetMapping(sheetMapping);
+}
 
-  // const res = await fetch('https://reqres.in/api/users?page=2')
-  const res = await fetch(apiUrl, requestOptions);
-  // You can return Date, Map, Set, etc.
+export const GET: APIRoute = async ({ request }) => {
+  // const url = new URL(request.url);
+  // const sourceSheetId = url.searchParams.get("source");
+  // const destSheetId = url.searchParams.get("dest");
+  // const userId = url.searchParams.get("userid");
+  // console.log(sourceSheetId);
 
-  if (!res.ok) {
-    // This will activate the closest `error.js` Error Boundary
-    // throw new Error('Failed to fetch data')
-    console.error("error");
-  }
+  // let sourceSheet: Tables<"ss_sheets"> = {
+  //   created_at: new Date().toISOString(),
+  //   name: "",
+  //   ss_id: sourceSheetId!,
+  // };
 
-  // Generated by https://quicktype.io
+  const sourceSheet = getSheet(request.url, "source");
+  const destSheet = getSheet(request.url, "dest");
+  const keycolumn = getColumn(request.url, "keyfield");
 
-  interface SsColumn {
-    pageNumber: number;
-    pageSize: number;
-    totalPages: number;
-    totalCount: number;
-    data: Datum[];
-  }
+  syncSheet(sourceSheet);
+  syncSheet(destSheet);
+  syncColumn(keycolumn);
 
-  interface Datum {
-    id: number;
-    version: number;
-    index: number;
-    title: string;
-    type: string;
-    primary?: boolean;
-    validation: boolean;
-    width: number;
-  }
+  addToSheetMapping(sourceSheet.ss_id, destSheet.ss_id, keycolumn.ss_id);
 
-  const data: SsColumn = await res.json();
-  //   console.log(JSON.stringify(data.data))
-
-  const option: string[] = data.data.map((d) => {
-    return `<option value="${d.id}">${d.title}</option>`;
-  });
-
-  console.log(option.join());
-
-  const options = option.join("");
-  //   console.log(data.map((d) => d * d));
-  //   let options = `<option value='325i'>325i</option>
-  //   <option value='325ix'>325ix</option>
-  //   <option value='X5'>X5</option>`
-
-  return new Response(options, {
-    status: res.status,
+  return new Response(`<h1>hell</h1>`, {
+    status: 200,
     headers: {
-      "Content-Type": "text/html",
+      "Content-Type": "application/json",
+      "HX-Redirect": `mapcolumns?source=${sourceSheet.ss_id}&dest=${destSheet.ss_id}`,
     },
   });
+  // let destSheet = {
+  //   created_at: "",
+  //   name: "",
+  //   ss_id: "",
+  // };
 };

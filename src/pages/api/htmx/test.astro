@@ -1,17 +1,15 @@
 ---
 // #REF astro read post data from htmx
-const payload = (await Astro.request.formData()).get('htmxbutton')
+const payload = (await Astro.request.formData()).get("htmxbutton");
 
 // #REF: htmx redirect usage, return it in the header
-return new Response((`<h1>hell</h1>`), {
-        status: 200,
-        headers: {
-          "Content-Type": "application/json",
-          "HX-Redirect":"www.google.com"
-        }
-      }
-    );
-
+return new Response(`<h1>hell</h1>`, {
+  status: 200,
+  headers: {
+    "Content-Type": "application/json",
+    "HX-Redirect": "www.google.com",
+  },
+});
 ---
 
 <!-- <h1 HX-Redirect="www.google.com">htmx is awesome {payload}</h1> -->
