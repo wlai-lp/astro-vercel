@@ -254,11 +254,66 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      create_sheet_mapping:
+        | {
+            Args: {
+              sourceid: string
+              sourcename: string
+              destid: string
+              destname: string
+              keyfieldid: string
+              keyfieldname: string
+              webhookid: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              sourceid: string
+              sourcename: string
+              destid: string
+              destname: string
+              keyfieldid: string
+              webhookid: string
+            }
+            Returns: string
+          }
+      create_sheet_mapping2: {
+        Args: {
+          sourceid: string
+          sourcename: string
+          destid: string
+          destname: string
+          keyfieldid: string
+          keyfieldname: string
+          webhookid: string
+        }
+        Returns: string
+      }
       draw_name: {
         Args: {
           groupid: string
           username: string
         }
+        Returns: string
+      }
+      hello: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      hello_world: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
+      my_stored_procedure: {
+        Args: {
+          param1: number
+          param2: string
+        }
+        Returns: undefined
+      }
+      test_storedproc: {
+        Args: Record<PropertyKey, never>
         Returns: string
       }
     }

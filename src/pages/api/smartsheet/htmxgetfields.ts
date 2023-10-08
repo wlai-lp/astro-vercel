@@ -33,7 +33,7 @@ export const GET: APIRoute = async ({ request }) => {
 
 
   // const res = await fetch('https://reqres.in/api/users?page=2')
-  const res = await fetch(apiUrl, getSsRequestOptions());
+  const res = await fetch(apiUrl, getSsRequestOptions("GET", ""));
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {
@@ -68,6 +68,7 @@ interface Datum {
 //   console.log(JSON.stringify(data.data))
 
   const option : string[] = data.data.map((d)=> {
+    // TODO: send cachec kb request
     return `<option value="${d.id}">${d.title}</option>`
   })
 

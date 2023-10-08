@@ -4,7 +4,7 @@ import { getSsRequestOptions } from "../../util/fetchOptions";
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.method);
   
-  const apiUrl = import.meta.env.SS_API_ENDPOINT + "?include=favorites";
+  const apiUrl = import.meta.env.SS_API_ENDPOINT + "sheets?include=favorites";
   // const token = import.meta.env.SS_API_KEY; // Replace with your actual access token
 
   // const headers = new Headers({
@@ -17,7 +17,7 @@ export const GET: APIRoute = async ({ request }) => {
   //   headers: headers,
   // };
   // const res = await fetch('https://reqres.in/api/users?page=2')
-  const res = await fetch(apiUrl, getSsRequestOptions());
+  const res = await fetch(apiUrl, getSsRequestOptions("GET", ""));
   // You can return Date, Map, Set, etc.
 
   if (!res.ok) {

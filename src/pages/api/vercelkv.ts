@@ -43,7 +43,8 @@ export async function CacheFav(intersection: Sheet[]) {
   try {
     intersection.map((sheet) => {
       const url = `${kvendpoint}/set/sheet${sheet.id}/${sheet.name}`;
-      console.log("cache " + url);
+      // #DATA https://right-mouse-42513.kv.vercel-storage.com/set/sheet6167495171172228/AskServices
+      // console.log("cache " + url);
       fetch(url, kvrequestOptions);
     });
   } catch (error) {}

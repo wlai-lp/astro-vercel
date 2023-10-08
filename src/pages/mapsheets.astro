@@ -36,7 +36,8 @@ console.log(Astro.request.url);
   <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
 <p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
   <div class="card w-96 bg-primary text-primary-content">
-    <form hx-get="/api/htmxupdatesheetmapping">
+    <!-- <form hx-get="/api/htmxupdatesheetmapping"> -->
+    <form hx-get="/api/htmxupdatesheetmapingwithfunc">
       <div class="card-body">
         <h2 class="card-title">Map Sheets</h2>
         <input class="hidden" name="userid" value="10" />
@@ -117,47 +118,4 @@ console.log(Astro.request.url);
     });
   };
 
-  const buttons = document.querySelectorAll("[data-update-api]");
-
-  // Handle clicks on each button.
-  buttons.forEach((button) => {
-    button.addEventListener("click", async () => {
-      // alert("Button was clicked!");
-      // fetch('https://jsonplaceholder.typicode.com/todos/1')
-      // const response = await fetch("/api/smartsheet/getfavsmartsheets");
-
-      // get the api key value
-      // debugger;
-
-      // const val = document.querySelector("#api_key_val");
-      const inputElement = document.getElementById(
-        "api_key_val"
-      ) as HTMLInputElement;
-
-      // TODO: validation?
-
-      const update_api_url = "/api/users/updateuser";
-      // Define headers for the request (optional)
-      const headers = {
-        "Content-Type": "application/json", // Set the content type to JSON
-        // Add any other headers you need here
-      };
-      // payload
-      const data = {
-        id: 10,
-        api_key: inputElement.value,
-      };
-      // fetch post call
-      const response = await fetch(update_api_url, {
-        method: "PATCH",
-        headers: headers,
-        body: JSON.stringify(data), // Convert data to JSON string
-      });
-      // fetch("/api/users/updateuser");
-      const result = await response.json();
-      console.log(result);
-      // window.history.back();
-      // todo: many a notification to alert api status update?
-    });
-  });
 </script>

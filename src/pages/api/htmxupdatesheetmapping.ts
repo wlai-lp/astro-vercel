@@ -4,6 +4,8 @@ import { addColumn, selectColumn } from "../../db/ss_columns";
 import { addSheetMapping } from "../../db/ss_sheet_mappings";
 import type { Database, Tables } from "../../db/types";
 import { GetSheetNameByID } from "./vercelkv";
+import { CreateWebHook } from "./smartsheet/createWebhook";
+import { supabase } from "../../db/supabase";
 
 // note: used by sheet mapping page to perform htmx update
 // htmx posts to this page
@@ -67,18 +69,20 @@ async function syncSheet(sheet: Tables<"ss_sheets">) {
 async function addToSheetMapping(
   source: string,
   dest: string,
-  trigger: string
+  trigger: string,
+  webhookId: string
 ) {
-  console.log('🚀 column id = ' + trigger)
-  const sheetMapping: Database['public']['Tables']['ss_sheet_mappings']['Insert'] = {
-    created_at: new Date().toISOString(),
-    dest_id: dest,
-    source_id: source,
-    source_trigger_column_id: trigger,
-    user_id: 10,
-    webhook_established: false,
-    webhook_id: "0",
-  };
+  console.log("🚀 column id = " + trigger);
+  const sheetMapping: Database["public"]["Tables"]["ss_sheet_mappings"]["Insert"] =
+    {
+      created_at: new Date().toISOString(),
+      dest_id: dest,
+      source_id: source,
+      source_trigger_column_id: trigger,
+      user_id: 10,
+      webhook_established: false,
+      webhook_id: webhookId,
+    };
   addSheetMapping(sheetMapping);
 }
 
@@ -95,15 +99,47 @@ export const GET: APIRoute = async ({ request }) => {
   //   ss_id: sourceSheetId!,
   // };
 
+
   const sourceSheet = getSheet(request.url, "source");
   const destSheet = getSheet(request.url, "dest");
   const keycolumn = getColumn(request.url, "keyfield");
 
-  syncSheet(sourceSheet);
-  syncSheet(destSheet);
-  syncColumn(keycolumn);
+  const destid = destSheet.ss_id;
+  const destname = destSheet.name!;
+  const keyfieldid = keycolumn.ss_id;
+  const sourceid = sourceSheet.ss_id;
+  const sourcename = sourceSheet.name!;
+  const webhookid = "";
 
-  addToSheetMapping(sourceSheet.ss_id, destSheet.ss_id, keycolumn.ss_id);
+  let { data, error } = await supabase.rpc("create_sheet_mapping", {
+    destid,
+    destname,
+    keyfieldid,
+    sourceid,
+    sourcename,
+    webhookid,
+  });
+
+  console.log("RPC call " + data)
+
+  // if (error) console.error(error);
+  // else console.log(data);
+
+  
+  
+
+  // syncSheet(sourceSheet);
+  // syncSheet(destSheet);
+  // syncColumn(keycolumn);
+
+  // // webhook
+  // const webhookId = await CreateWebHook("webhooktest1", sourceSheet.ss_id);
+  // addToSheetMapping(
+  //   sourceSheet.ss_id,
+  //   destSheet.ss_id,
+  //   keycolumn.ss_id,
+  //   webhookId
+  // );
 
   return new Response(`<h1>hell</h1>`, {
     status: 200,

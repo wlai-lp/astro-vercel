@@ -1,1 +1,150 @@
-<h1>map columns page</h1>
+---
+import type { GetStaticPaths } from "astro";
+import GreetingCard from "../components/GreetingCard.astro";
+import Card from "../components/Card.astro";
+import Layout from "../layouts/Layout.astro";
+// import { request } from Astro.request;
+
+// TODO: better to get user id and perfrom api call to get data directly
+console.log(Astro.request.url);
+// console.log(request.export const getStaticPaths = (() => {
+
+//     return [];
+// }) satisfies GetStaticPaths;)
+---
+
+<!-- <html data-theme="dark"> --><!-- Content you want to center -->
+<Layout title="Map Sheets">
+  <!-- htmx demo -->
+  <div id="replaceMe">
+    <td colspan="3">
+      <button
+        name="htmxbutton"
+        value="htmxbutton-valuexxx"
+        class="btn"
+        hx-post="/api/htmx/test"
+        hx-redirect="www.google.com"
+        hx-target="#replaceMe"
+        hx-swap="outerHTML"
+      >
+        click me</button
+      >
+    </td>
+  </div>
+  <!-- end htmx demo -->
+
+  <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
+<p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
+  <div class="card bg-primary text-primary-content">
+    <form hx-get="/api/htmxupdatesheetmapping">
+      <div class="card-body">
+        <div class="join">
+            <div>
+              <div>
+                <input class="input input-bordered join-item" placeholder="Search"/>
+              </div>
+            </div>
+            <select class="select select-bordered join-item">
+              <option disabled selected>Filter</option>
+              <option>Sci-fi</option>
+              <option>Drama</option>
+              <option>Action</option>
+            </select>
+            <div class="indicator">
+              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
+              <button class="btn join-item">Search</button>
+            </div>
+          </div>        
+      </div>
+    </form>
+  </div>
+
+  <div class="card bg-primary text-primary-content">
+    <form hx-get="/api/htmxupdatesheetmapping">
+      <div class="card-body">
+        <div class="join">
+            <div>
+              <div>
+                <input class="input input-bordered join-item" placeholder="Search"/>
+              </div>
+            </div>
+            <select class="select select-bordered join-item">
+              <option disabled selected>Filter</option>
+              <option>Sci-fi</option>
+              <option>Drama</option>
+              <option>Action</option>
+            </select>
+            <div class="indicator">
+              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
+              <button class="btn join-item">Search</button>
+            </div>
+          </div>        
+      </div>
+    </form>
+  </div>
+
+  <div class="card bg-primary text-primary-content">
+    <form hx-get="/api/htmxupdatesheetmapping">
+      <div class="card-body">
+        <div class="join">
+            <div>
+              <div>
+                <input class="input input-bordered join-item" placeholder="Search"/>
+              </div>
+            </div>
+            <select class="select select-bordered join-item">
+              <option disabled selected>Filter</option>
+              <option>Sci-fi</option>
+              <option>Drama</option>
+              <option>Action</option>
+            </select>
+            <div class="indicator">
+              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
+              <button class="btn join-item">Search</button>
+            </div>
+          </div>        
+      </div>
+    </form>
+  </div>
+
+
+</Layout>
+
+<script>
+    window.onload = async () => {
+    console.log("window loaded");
+    const url = "/api/smartsheet/getfavsmartsheets";
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+    const result = await response.json();
+    console.log(result.data);
+
+    // add elements
+    const sourceElement = document.getElementById("sourceSelect");
+    const destElement = document.getElementById("destSelect");
+
+    type OptionInfo = {
+      id: string;
+      name: string;
+    };
+    const optionInfos: OptionInfo[] = result.data;
+    optionInfos.forEach((optionInfo) => {
+      const optionElement = document.createElement("option");
+      optionElement.value = optionInfo.id; // Set the value attribute
+      optionElement.text = optionInfo.name; // Set the text content
+
+      const optionElement2 = document.createElement("option");
+      optionElement2.value = optionInfo.id; // Set the value attribute
+      optionElement2.text = optionInfo.name; // Set the text content
+
+      // Append the option to the <select> element
+      destElement!.appendChild(optionElement);
+      sourceElement!.appendChild(optionElement2);
+      console.log("create options");
+    });
+  };
+
+</script>

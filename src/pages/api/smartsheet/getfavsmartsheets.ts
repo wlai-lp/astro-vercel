@@ -42,7 +42,7 @@ export const GET: APIRoute = async ({ request }) => {
     });
   }
 
-  const apiUrl = import.meta.env.SS_API_ENDPOINT + "?includeAll=true";
+  const apiUrl = import.meta.env.SS_API_ENDPOINT + "sheets?includeAll=true";
   const apiFavUrl =
     "https://app.smartsheet.com/2.0/internal/favorites?include=name,directId&includeAll=true";
 
