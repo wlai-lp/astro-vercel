@@ -6,9 +6,10 @@ import { addSheet, selectSheet } from "../../db/ss_sheets";
 import { addColumn, selectColumn } from "../../db/ss_columns";
 import { addSheetMapping } from "../../db/ss_sheet_mappings";
 import type { Database, Tables } from "../../db/types";
-import { GetSheetNameByID } from "./vercelkv";
+import { GetSheetNameByID, GetSsColNameByID } from "./vercelkv";
 import { CreateWebHook } from "./smartsheet/createWebhook";
 import { supabase } from "../../db/supabase";
+
 
 // note: used by sheet mapping page to perform htmx update
 // htmx posts to this page
@@ -29,13 +30,14 @@ export const GET: APIRoute = async ({ request }) => {
   const keyfieldid = url.searchParams.get("keyfield")!;
 
   // kv call
-  const destname = "destname";
+  const destname = await GetSheetNameByID(destid)
   // kv call
-  const sourcename = "sourceSheet.name!";
+  const sourcename = await GetSheetNameByID(sourceid)
   // ss call
   const webhookid = await CreateWebHook("smartersheet", sourceid!)!;
   // TODO
-  const keyfieldname = "smartersheet key field name";
+  
+  const keyfieldname = await GetSsColNameByID(keyfieldid)
 
   let { data, error } = await supabase.rpc("create_sheet_mapping", {
     sourceid, 
@@ -50,7 +52,7 @@ export const GET: APIRoute = async ({ request }) => {
   if(error){
     console.error("🛑⛔🚫 RPC error " + JSON.stringify(error))
   }
-  
+
   console.log("🚀🚀🚀 RPC call " + data)
 
 

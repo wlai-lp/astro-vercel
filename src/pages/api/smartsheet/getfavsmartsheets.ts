@@ -52,7 +52,7 @@ export const GET: APIRoute = async ({ request }) => {
   const [sheetdata, favdata] = await Promise.all([allsheet, favsheet]);
 
   type Sheet = {
-    id: Number;
+    id: number;
     name: String;
   };
 
