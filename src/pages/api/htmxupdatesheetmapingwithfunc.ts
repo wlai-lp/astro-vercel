@@ -30,13 +30,13 @@ export const GET: APIRoute = async ({ request }) => {
   const keyfieldid = url.searchParams.get("keyfield")!;
 
   // kv call
-  const destname = await GetSheetNameByID(destid)
+  const destname = await GetSheetNameByID(destid) || ""
   // kv call
-  const sourcename = await GetSheetNameByID(sourceid)
+  const sourcename = await GetSheetNameByID(sourceid) || ""
   // ss call
   const webhookid = await CreateWebHook("smartersheet", sourceid!)!;
   // TODO
-  
+
   const keyfieldname = await GetSsColNameByID(keyfieldid)
 
   let { data, error } = await supabase.rpc("create_sheet_mapping", {
@@ -50,11 +50,18 @@ export const GET: APIRoute = async ({ request }) => {
   });
 
   if(error){
+    // TODO: error handling
     console.error("🛑⛔🚫 RPC error " + JSON.stringify(error))
-  }
+    return new Response(`<h1>${JSON.stringify(error)}</h1>`, {
+        status: 200,
+        headers: {
+          "Content-Type": "application/json",
+          "HX-Redirect": `error`,
+        },
+      });
+  } 
 
   console.log("🚀🚀🚀 RPC call " + data)
-
 
   return new Response(`<h1>hell</h1>`, {
     status: 200,

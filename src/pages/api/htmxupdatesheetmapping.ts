@@ -18,6 +18,8 @@ import { supabase } from "../../db/supabase";
 // TODO 6. update webhook table
 // 7. create sheet mapping table
 
+// Note: this code has been replaced by ...withfunc that uses postgres function do the all the db related tasks
+
 function getSheet(reqUrl: string, name: string) {
   const url = new URL(reqUrl);
   const sourceSheetId = url.searchParams.get(name);
@@ -61,7 +63,7 @@ async function syncSheet(sheet: Tables<"ss_sheets">) {
     console.log("no sheet id in db, create one");
     const sheetName = await GetSheetNameByID(sheet.ss_id);
     console.log(" 🚀 " + sheetName);
-    sheet.name = sheetName.result;
+    // sheet.name = sheetName.result;
     const addSourceSheet = await addSheet(sheet);
   }
 }
