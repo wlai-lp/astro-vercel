@@ -4,17 +4,40 @@ import GreetingCard from "../components/GreetingCard.astro";
 import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
 // import { request } from Astro.request;
+import { GetSheetNameByID } from "./api/vercelkv";
+import { getColumnsBySheetId } from "./api/smartsheet/getColumnsBySheetId"
 
 // TODO: better to get user id and perfrom api call to get data directly
 console.log(Astro.request.url);
 // console.log(request.export const getStaticPaths = (() => {
+const url = new URL(Astro.request.url)
+const webhook = url.searchParams.get("webhook")
+const sourceId = url.searchParams.get("source")
+const sourceName = await GetSheetNameByID(sourceId!);
+const destId = url.searchParams.get("dest")
+const destName = await GetSheetNameByID(destId!);
+const sourceCols = await getColumnsBySheetId(sourceId!)
+const destCols = await getColumnsBySheetId(destId!)
+type Col = {
+  id: string,
+  title: string
+}
 
+const sourceFields: Col[] = JSON.parse(sourceCols!)
+const destFields: Col[] = JSON.parse(destCols!)
+
+// {sourceFields.map((data) => `<option>{data.title}</option>`)}
+
+// const destCols = await GetSheetCols(dest!)
+console.log(sourceCols)
+console.log(sourceFields.length)
+// console.log(destFields.length)
 //     return [];
 // }) satisfies GetStaticPaths;)
 ---
 
 <!-- <html data-theme="dark"> --><!-- Content you want to center -->
-<Layout title="Map Sheets">
+<Layout title="Map Columns">
   <!-- htmx demo -->
   <div id="replaceMe">
     <td colspan="3">
@@ -32,27 +55,26 @@ console.log(Astro.request.url);
     </td>
   </div>
   <!-- end htmx demo -->
-
+  <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
   <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
 <p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
-  <div class="card bg-primary text-primary-content">
+  <div class="card bg-primary text-primary-content">    
     <form hx-get="/api/htmxupdatesheetmapping">
       <div class="card-body">
         <div class="join">
-            <div>
-              <div>
-                <input class="input input-bordered join-item" placeholder="Search"/>
-              </div>
-            </div>
+            
+              <select class="select select-bordered join-item">
+                <option disabled selected>Source Column</option>
+                {sourceFields.map((data) => <option id={data.id}>{data.title}</option>)}
+              </select>
+            
             <select class="select select-bordered join-item">
-              <option disabled selected>Filter</option>
-              <option>Sci-fi</option>
-              <option>Drama</option>
-              <option>Action</option>
+              <option disabled selected>Destination Column</option>
+              {destFields.map((data) => <option id={data.id}>{data.title}</option>)}
             </select>
             <div class="indicator">
               <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
-              <button class="btn join-item">Search</button>
+              <button class="btn join-item">Map Column</button>
             </div>
           </div>        
       </div>
