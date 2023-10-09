@@ -67,7 +67,7 @@ export const GET: APIRoute = async ({ request }) => {
     status: 200,
     headers: {
       "Content-Type": "application/json",
-      "HX-Redirect": `mapcolumns?source=${sourceid}&dest=${destid}`,
+      "HX-Redirect": `mapcolumns?source=${sourceid}&dest=${destid}&webhook=${webhookid}`,
     },
   });
 };

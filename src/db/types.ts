@@ -63,22 +63,22 @@ export interface Database {
           created_at: string
           deskt_column_id: string | null
           id: number
-          sheet_mapping_id: number | null
           source_column_id: string | null
+          webhook_id: string | null
         }
         Insert: {
           created_at?: string
           deskt_column_id?: string | null
           id?: number
-          sheet_mapping_id?: number | null
           source_column_id?: string | null
+          webhook_id?: string | null
         }
         Update: {
           created_at?: string
           deskt_column_id?: string | null
           id?: number
-          sheet_mapping_id?: number | null
           source_column_id?: string | null
+          webhook_id?: string | null
         }
         Relationships: [
           {
@@ -88,15 +88,15 @@ export interface Database {
             referencedColumns: ["ss_id"]
           },
           {
-            foreignKeyName: "ss_column_mappings_sheet_mapping_id_fkey"
-            columns: ["sheet_mapping_id"]
-            referencedRelation: "ss_sheet_mappings"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "ss_column_mappings_source_column_id_fkey"
             columns: ["source_column_id"]
             referencedRelation: "ss_columns"
+            referencedColumns: ["ss_id"]
+          },
+          {
+            foreignKeyName: "ss_column_mappings_webhook_id_fkey"
+            columns: ["webhook_id"]
+            referencedRelation: "ss_webhooks"
             referencedColumns: ["ss_id"]
           }
         ]

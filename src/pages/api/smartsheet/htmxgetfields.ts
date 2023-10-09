@@ -1,12 +1,12 @@
 import type { APIRoute } from "astro";
 import { getSsRequestOptions } from "../../util/fetchOptions";
-import { CacheColName } from "../vercelkv";
+import { CacheColName, CacheSheetCols } from "../vercelkv";
 
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.url);
   const url = new URL(request.url);
-  const sourceSheetId = url.searchParams.get("source");
-  console.log(sourceSheetId);
+  const sourceSheetId = url.searchParams.get("source") || url.searchParams.get("dest");
+  console.log("get sheet id fields " + sourceSheetId);
 
   if (!sourceSheetId) {
     console.log("no source id");
@@ -64,7 +64,9 @@ export const GET: APIRoute = async ({ request }) => {
   }
 
   const data: SsColumn = await res.json();
-  //   console.log(JSON.stringify(data.data))
+  const result = JSON.stringify(data.data) 
+    console.log(result)
+    CacheSheetCols(sourceSheetId, result)
 
   type KV = {
     id: number;

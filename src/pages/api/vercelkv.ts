@@ -84,3 +84,25 @@ export async function GetSsColNameByID(ss_colId: string) {
     return kvresult.result
   } catch (error) {}
 }
+
+// given sheetid, cache the json returned from ss api
+export async function CacheSheetCols(ss_Id: string, ss_value: string) {
+  try {
+    const url = `${kvendpoint}/set/sheet${ss_Id}cols/${ss_value}`;
+    const data = await fetch(url, kvrequestOptions);
+    const kvresult = JSON.parse(JSON.stringify(await data.json())) as KvResult;
+    // return data.json()
+    return kvresult.result
+  } catch (error) {}
+}
+
+// given sheetid, return the json returned from ss api
+export async function GetSheetCols(ss_Id: string) {
+  try {
+    const url = `${kvendpoint}/get/sheet${ss_Id}cols/`;
+    const data = await fetch(url, kvrequestOptions);
+    const kvresult = JSON.parse(JSON.stringify(await data.json())) as KvResult;
+    // return data.json()
+    return kvresult.result
+  } catch (error) {}
+}
