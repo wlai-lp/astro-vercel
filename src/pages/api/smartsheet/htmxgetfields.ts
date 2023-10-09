@@ -1,6 +1,6 @@
 import type { APIRoute } from "astro";
 import { getSsRequestOptions } from "../../util/fetchOptions";
-import { CacheColName, CacheSheetCols } from "../vercelkv";
+import { CacheColName } from "../vercelkv";
 
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.url);
@@ -65,8 +65,6 @@ export const GET: APIRoute = async ({ request }) => {
 
   const data: SsColumn = await res.json();
   const result = JSON.stringify(data.data) 
-    console.log(result)
-    CacheSheetCols(sourceSheetId, result)
 
   type KV = {
     id: number;
