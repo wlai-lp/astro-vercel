@@ -66,10 +66,9 @@ export interface Database {
           source_column_id: string | null
           webhook_id: string | null
         }
-        Insert: {
-          created_at?: string
+        Insert: {          
           deskt_column_id?: string | null
-          id?: number
+          
           source_column_id?: string | null
           webhook_id?: string | null
         }
@@ -108,9 +107,7 @@ export interface Database {
           name: string | null
           ss_id: string
         }
-        Insert: {
-          created_at?: string
-          id?: number
+        Insert: {          
           name?: string | null
           ss_id: string
         }

@@ -1,6 +1,7 @@
 import type { APIRoute } from "astro";
 import { getSsRequestOptions } from "../../util/fetchOptions";
 import { CacheColName } from "../vercelkv";
+import { supabase } from "../../../db/supabase";
 
 export const GET: APIRoute = async ({ request }) => {
   console.log(request.url);
@@ -68,7 +69,7 @@ export const GET: APIRoute = async ({ request }) => {
 
   type KV = {
     id: number;
-    name: String;
+    name: string;
   };
 
   const kv: KV[] = data.data.map((d) => {
@@ -76,6 +77,16 @@ export const GET: APIRoute = async ({ request }) => {
   });
   // send cachec kb request
   CacheColName(kv);
+
+  kv.map(async (d) =>{
+    const { data, error: groupError } = await supabase
+    .from("ss_columns")
+    .insert({
+      name : d.name.toString(),
+      ss_id :d.id.toString()
+    })
+    .select()
+  })
   
   const option: string[] = data.data.map((d) => {
     return `<option value="${d.id}">${d.title}</option>`;

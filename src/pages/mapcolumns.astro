@@ -82,30 +82,35 @@ console.log("😂 " + JSON.stringify(data));
     <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
     <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
 <p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
-    <form hx-get="/api/htmxupdatesheetmapping">
+    <form>
       <div class="card bg-primary text-primary-content">
         <div class="card-body">
           <div class="join">
-            <select class="select select-bordered join-item">
+            <select name="sourceColumn" class="select select-bordered join-item">
               <option disabled selected>Source Column</option>
               {
                 sourceFields.map((data) => (
-                  <option id={data.id}>{data.title}</option>
+                  <option id={data.id} value={data.id}>{data.title}</option>
                 ))
               }
             </select>
 
-            <select class="select select-bordered join-item">
+            <select name="destColumn" class="select select-bordered join-item">
               <option disabled selected>Destination Column</option>
               {
                 destFields.map((data) => (
-                  <option id={data.id}>{data.title}</option>
+                  <option id={data.id} value={data.id}>{data.title}</option>
                 ))
               }
             </select>
             <div class="indicator">
               <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
-              <button class="btn join-item">Map Column</button>
+              <button
+                class="btn join-item"
+                hx-post="api/htmx/htmxaddrow"
+                hx-target="#swapme"
+                hx-swap="afterend">Map Column</button
+              >
             </div>
           </div>
         </div>
@@ -161,8 +166,6 @@ console.log("😂 " + JSON.stringify(data));
             </button>
           </td>
         </tr>
-
-        
       </tbody>
     </table>
   </div>
