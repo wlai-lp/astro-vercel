@@ -7,8 +7,9 @@ import { supabase } from "../../../db/supabase";
 export const POST: APIRoute = async ({ request }) => {
 
   const url = new URL(request.url)
-  const webhookId = url.searchParams.get("webhook")
   const formData = await request.formData();
+  const webhookId = formData.get("webhook");
+  console.log(" 🚀🚀 " + webhookId)
   const sourceColId = formData.get("sourceColumn");
   const deskColId = formData.get("destColumn");
   console.log(sourceColId?.toString())
@@ -18,7 +19,7 @@ export const POST: APIRoute = async ({ request }) => {
   .insert({
     deskt_column_id : deskColId?.toString(),
     source_column_id: sourceColId?.toString(),
-    webhook_id: webhookId
+    webhook_id: webhookId?.toString()
   })
   .select("id")
   .single()
@@ -28,15 +29,20 @@ export const POST: APIRoute = async ({ request }) => {
   }
 
   console.log(JSON.stringify(data))
+  const { id } = data!;
+  console.log(id)
+
+
+
 
   const wei = "dogg";
   const options = `<tr>
-<td>htmx swap</td>
-<td>${wei}</td>
+<td>${sourceColId?.toString()}</td>
+<td>${deskColId?.toString()}</td>
 <td>
   <button
-    name="abc"
-    value="abc"
+    name="deleteColMapping"
+    value=${id}
     class="btn btn-danger"
     hx-delete="/api/htmxdeletecolumn"
   >

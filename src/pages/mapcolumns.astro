@@ -42,6 +42,7 @@ if (groupError) {
 // });
 
 type colMapping = {
+  colId: number,
   destId: string;
   destName: string;
   sourceId: string;
@@ -50,6 +51,7 @@ type colMapping = {
 const columns = data?.map((d) => {
   console.log(d.source_column_id);
   return {
+    colId: d.id,
     destId: d.deskt_column_id,
     destName: "destname",
     sourceId: d.source_column_id,
@@ -79,10 +81,14 @@ console.log("😂 " + JSON.stringify(data));
       </td>
     </div>
     <!-- end htmx demo -->
-    <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
-    <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
-<p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
+    <div class="">
+      <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
+    </div>
+    
     <form>
+      <div class="hidden">
+        <input name="webhook" value={webhook} />
+      </div>
       <div class="card bg-primary text-primary-content">
         <div class="card-body">
           <div class="join">
@@ -140,8 +146,8 @@ console.log("😂 " + JSON.stringify(data));
                 <td>{col.destId}</td>
                 <td>
                   <button
-                    name="abc"
-                    value="abc"
+                    name="deleteColMapping"
+                    value={col.colId}
                     class="btn btn-danger"
                     hx-delete="/api/htmxdeletecolumn"
                   >
