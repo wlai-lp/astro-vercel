@@ -1,4 +1,22 @@
 ---
+import { supabase } from "../../db/supabase";
+const formData = await Astro.request.formData()
+const id = formData.get("deleteColMapping")
+console.log("delete column id " + id)
+
+const { data, error: groupError } = await supabase
+  .from("ss_column_mappings")
+  .delete()
+  .eq("id", parseInt(id!.toString()))  
+  
+  if (!data) {
+      console.error("No data returned");
+    }
+  
+    if (groupError) {
+      console.log("error " + groupError.message);
+    }
+    console.log(JSON.stringify(data));
 
 return new Response(``, {
   status: 200,
