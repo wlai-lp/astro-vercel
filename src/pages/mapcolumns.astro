@@ -1,172 +1,209 @@
 ---
-import type { GetStaticPaths } from "astro";
-import GreetingCard from "../components/GreetingCard.astro";
-import Card from "../components/Card.astro";
 import Layout from "../layouts/Layout.astro";
-// import { request } from Astro.request;
 import { GetSheetNameByID } from "./api/vercelkv";
-import { getColumnsBySheetId } from "./api/smartsheet/getColumnsBySheetId"
-
-// TODO: better to get user id and perfrom api call to get data directly
-console.log(Astro.request.url);
-// console.log(request.export const getStaticPaths = (() => {
-const url = new URL(Astro.request.url)
-const webhook = url.searchParams.get("webhook")
-const sourceId = url.searchParams.get("source")
+import { getColumnsBySheetId } from "./api/smartsheet/getColumnsBySheetId";
+import { supabase } from "../db/supabase";
+import type { Tables } from "../db/types";
+const url = new URL(Astro.request.url);
+const webhook = url.searchParams.get("webhook");
+const sourceId = url.searchParams.get("source");
 const sourceName = await GetSheetNameByID(sourceId!);
-const destId = url.searchParams.get("dest")
+const destId = url.searchParams.get("dest");
 const destName = await GetSheetNameByID(destId!);
-const sourceCols = await getColumnsBySheetId(sourceId!)
-const destCols = await getColumnsBySheetId(destId!)
+const sourceCols = await getColumnsBySheetId(sourceId!);
+const destCols = await getColumnsBySheetId(destId!);
 type Col = {
-  id: string,
-  title: string
+  id: string;
+  title: string;
+};
+
+const sourceFields: Col[] = JSON.parse(sourceCols!);
+const destFields: Col[] = JSON.parse(destCols!);
+
+console.log(sourceCols);
+console.log(sourceFields.length);
+
+// get list of columns by webhook
+const { data, error: groupError } = await supabase
+  .from("ss_column_mappings")
+  .select()
+  .eq("webhook_id", webhook!);
+
+if (!data) {
+  console.error("No data returned");
 }
 
-const sourceFields: Col[] = JSON.parse(sourceCols!)
-const destFields: Col[] = JSON.parse(destCols!)
+if (groupError) {
+  console.log("error " + groupError.message);
+}
+// const columns = data?.map(async (d) => {
+//   console.log(d.source_column_id);
+//   await supabase.from("ss_columns").select;
+// });
 
-// {sourceFields.map((data) => `<option>{data.title}</option>`)}
+type colMapping = {
+  destId: string;
+  destName: string;
+  sourceId: string;
+  sourceName: string;
+};
+const columns = data?.map((d) => {
+  console.log(d.source_column_id);
+  return {
+    destId: d.deskt_column_id,
+    destName: "destname",
+    sourceId: d.source_column_id,
+    sourceName: "sourcename",
+  };
+});
 
-// const destCols = await GetSheetCols(dest!)
-console.log(sourceCols)
-console.log(sourceFields.length)
-// console.log(destFields.length)
-//     return [];
-// }) satisfies GetStaticPaths;)
+console.log("😂 length is " + columns!.length);
+
+console.log("😂 " + JSON.stringify(data));
 ---
 
 <!-- <html data-theme="dark"> --><!-- Content you want to center -->
 <Layout title="Map Columns">
-  <!-- htmx demo -->
-  <div id="replaceMe">
-    <td colspan="3">
-      <button
-        name="htmxbutton"
-        value="htmxbutton-valuexxx"
-        class="btn"
-        hx-post="/api/htmx/test"
-        hx-redirect="www.google.com"
-        hx-target="#replaceMe"
-        hx-swap="outerHTML"
-      >
-        click me</button
-      >
-    </td>
-  </div>
-  <!-- end htmx demo -->
-  <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
-  <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
+  <div class="">
+    <!-- htmx demo -->
+    <div id="replaceMe">
+      <td colspan="3">
+        <button
+          class="btn"
+          hx-get="api/htmx/htmxaddrow"
+          hx-target="#swapme"
+          hx-swap="afterend"
+        >
+          Load More Agents... <img class="htmx-indicator" src="/img/bars.svg" />
+        </button>
+      </td>
+    </div>
+    <!-- end htmx demo -->
+    <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
+    <!-- <p>Received a {Astro.request.method} request to "{Astro.request.url}".</p>
 <p>Received request headers: <code>{JSON.stringify(Object.fromEntries(Astro.request.headers))}</code> -->
-  <div class="card bg-primary text-primary-content">    
     <form hx-get="/api/htmxupdatesheetmapping">
-      <div class="card-body">
-        <div class="join">
-            
-              <select class="select select-bordered join-item">
-                <option disabled selected>Source Column</option>
-                {sourceFields.map((data) => <option id={data.id}>{data.title}</option>)}
-              </select>
-            
+      <div class="card bg-primary text-primary-content">
+        <div class="card-body">
+          <div class="join">
+            <select class="select select-bordered join-item">
+              <option disabled selected>Source Column</option>
+              {
+                sourceFields.map((data) => (
+                  <option id={data.id}>{data.title}</option>
+                ))
+              }
+            </select>
+
             <select class="select select-bordered join-item">
               <option disabled selected>Destination Column</option>
-              {destFields.map((data) => <option id={data.id}>{data.title}</option>)}
+              {
+                destFields.map((data) => (
+                  <option id={data.id}>{data.title}</option>
+                ))
+              }
             </select>
             <div class="indicator">
               <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
               <button class="btn join-item">Map Column</button>
             </div>
-          </div>        
+          </div>
+        </div>
       </div>
     </form>
   </div>
 
-  <div class="card bg-primary text-primary-content">
-    <form hx-get="/api/htmxupdatesheetmapping">
-      <div class="card-body">
-        <div class="join">
-            <div>
-              <div>
-                <input class="input input-bordered join-item" placeholder="Search"/>
-              </div>
-            </div>
-            <select class="select select-bordered join-item">
-              <option disabled selected>Filter</option>
-              <option>Sci-fi</option>
-              <option>Drama</option>
-              <option>Action</option>
-            </select>
-            <div class="indicator">
-              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
-              <button class="btn join-item">Search</button>
-            </div>
-          </div>        
-      </div>
-    </form>
+  <div class="overflow-x-auto">
+    <table class="table delete-row-example">
+      <thead>
+        <tr>
+          <th>Source</th>
+          <th>Destination</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody
+        hx-confirm="Are you sure?"
+        hx-target="closest tr"
+        hx-swap="outerHTML swap:1s"
+      >
+        {
+          columns?.map((col) => {
+            return (
+              <tr>
+                <td>{col.sourceId}</td>
+                <td>{col.destId}</td>
+                <td>
+                  <button
+                    name="abc"
+                    value="abc"
+                    class="btn btn-danger"
+                    hx-delete="/api/htmxdeletecolumn"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            );
+          })
+        }
+        <tr id="swapme">
+          <td>Angie MacDowell</td>
+          <td>angie@macdowell.org</td>
+          <td>
+            <button
+              name="abc"
+              value="abc"
+              class="btn btn-danger"
+              hx-delete="/api/htmxdeletecolumn"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+
+        
+      </tbody>
+    </table>
   </div>
-
-  <div class="card bg-primary text-primary-content">
-    <form hx-get="/api/htmxupdatesheetmapping">
-      <div class="card-body">
-        <div class="join">
-            <div>
-              <div>
-                <input class="input input-bordered join-item" placeholder="Search"/>
-              </div>
-            </div>
-            <select class="select select-bordered join-item">
-              <option disabled selected>Filter</option>
-              <option>Sci-fi</option>
-              <option>Drama</option>
-              <option>Action</option>
-            </select>
-            <div class="indicator">
-              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
-              <button class="btn join-item">Search</button>
-            </div>
-          </div>        
-      </div>
-    </form>
-  </div>
-
-
 </Layout>
 
+<style>
+  tr.htmx-swapping td {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+</style>
+
 <script>
-    window.onload = async () => {
-    console.log("window loaded");
-    const url = "/api/smartsheet/getfavsmartsheets";
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-    const result = await response.json();
-    console.log(result.data);
-
-    // add elements
-    const sourceElement = document.getElementById("sourceSelect");
-    const destElement = document.getElementById("destSelect");
-
-    type OptionInfo = {
-      id: string;
-      name: string;
-    };
-    const optionInfos: OptionInfo[] = result.data;
-    optionInfos.forEach((optionInfo) => {
-      const optionElement = document.createElement("option");
-      optionElement.value = optionInfo.id; // Set the value attribute
-      optionElement.text = optionInfo.name; // Set the text content
-
-      const optionElement2 = document.createElement("option");
-      optionElement2.value = optionInfo.id; // Set the value attribute
-      optionElement2.text = optionInfo.name; // Set the text content
-
-      // Append the option to the <select> element
-      destElement!.appendChild(optionElement);
-      sourceElement!.appendChild(optionElement2);
-      console.log("create options");
-    });
+  window.onload = async () => {
+    // console.log("window loaded");
+    // const url = "/api/smartsheet/getfavsmartsheets";
+    // const response = await fetch(url, {
+    //   method: "GET",
+    //   headers: { "Content-Type": "application/json" },
+    // });
+    // const result = await response.json();
+    // console.log(result.data);
+    // // add elements
+    // const sourceElement = document.getElementById("sourceSelect");
+    // const destElement = document.getElementById("destSelect");
+    // type OptionInfo = {
+    //   id: string;
+    //   name: string;
+    // };
+    // const optionInfos: OptionInfo[] = result.data;
+    // optionInfos.forEach((optionInfo) => {
+    //   const optionElement = document.createElement("option");
+    //   optionElement.value = optionInfo.id; // Set the value attribute
+    //   optionElement.text = optionInfo.name; // Set the text content
+    //   const optionElement2 = document.createElement("option");
+    //   optionElement2.value = optionInfo.id; // Set the value attribute
+    //   optionElement2.text = optionInfo.name; // Set the text content
+    //   // Append the option to the <select> element
+    //   destElement!.appendChild(optionElement);
+    //   sourceElement!.appendChild(optionElement2);
+    //   console.log("create options");
+    // });
   };
-
 </script>

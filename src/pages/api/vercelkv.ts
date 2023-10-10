@@ -54,6 +54,7 @@ export async function GetSheetNameByID(sheetId: string) {
   try {
     const url = `${kvendpoint}/get/sheet${sheetId}/`;
     const data = await fetch(url, kvrequestOptions);
+    console.log("KV url = " + url)
     // return data.json()
     const kvresult = JSON.parse(JSON.stringify(await data.json())) as KvResult;
     // return data.json()
