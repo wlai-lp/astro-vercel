@@ -66,8 +66,8 @@ export interface Database {
           source_column_id: string | null
           webhook_id: string | null
         }
-        Insert: {          
-          deskt_column_id?: string | null
+        Insert: {
+                    deskt_column_id?: string | null
           
           source_column_id?: string | null
           webhook_id?: string | null
@@ -107,8 +107,8 @@ export interface Database {
           name: string | null
           ss_id: string
         }
-        Insert: {          
-          name?: string | null
+        Insert: {
+                    name?: string | null
           ss_id: string
         }
         Update: {
@@ -124,6 +124,7 @@ export interface Database {
           created_at: string
           dest_id: string | null
           id: number
+          name: string
           source_id: string | null
           source_trigger_column_id: string | null
           user_id: number | null
@@ -134,6 +135,7 @@ export interface Database {
           created_at?: string
           dest_id?: string | null
           id?: number
+          name: string
           source_id?: string | null
           source_trigger_column_id?: string | null
           user_id?: number | null
@@ -144,6 +146,7 @@ export interface Database {
           created_at?: string
           dest_id?: string | null
           id?: number
+          name?: string
           source_id?: string | null
           source_trigger_column_id?: string | null
           user_id?: number | null
@@ -243,6 +246,21 @@ export interface Database {
           id?: number
           name?: string | null
           ss_id?: string
+        }
+        Relationships: []
+      }
+      todos: {
+        Row: {
+          id: number
+          task: string | null
+        }
+        Insert: {
+          id?: number
+          task?: string | null
+        }
+        Update: {
+          id?: number
+          task?: string | null
         }
         Relationships: []
       }
