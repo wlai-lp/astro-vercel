@@ -28,6 +28,7 @@ export const GET: APIRoute = async ({ request }) => {
   const sourceid = url.searchParams.get("source")!;
   const destid = url.searchParams.get("dest")!;
   const keyfieldid = url.searchParams.get("keyfield")!;
+  const name = url.searchParams.get("mapname")!;
 
   // kv call
   const destname = await GetSheetNameByID(destid) || ""
@@ -39,14 +40,15 @@ export const GET: APIRoute = async ({ request }) => {
 
   const keyfieldname = await GetSsColNameByID(keyfieldid)
 
-  let { data, error } = await supabase.rpc("create_sheet_mapping", {
+  let { data, error } = await supabase.rpc("add_sheet_mapping", {
     sourceid, 
     sourcename,
     destid,
     destname,
     keyfieldid,
     keyfieldname,
-    webhookid 
+    webhookid,
+    name 
   });
 
   if(error){

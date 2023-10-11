@@ -269,6 +269,19 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      add_sheet_mapping: {
+        Args: {
+          sourceid: string
+          sourcename: string
+          destid: string
+          destname: string
+          keyfieldid: string
+          keyfieldname: string | undefined
+          webhookid: string
+          name: string
+        }
+        Returns: string
+      }
       create_sheet_mapping:
         | {
             Args: {
@@ -310,10 +323,6 @@ export interface Database {
           groupid: string
           username: string
         }
-        Returns: string
-      }
-      hello: {
-        Args: Record<PropertyKey, never>
         Returns: string
       }
       hello_world: {
