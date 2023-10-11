@@ -42,7 +42,7 @@ if (groupError) {
 // });
 
 type colMapping = {
-  colId: number,
+  colId: number;
   destId: string;
   destName: string;
   sourceId: string;
@@ -64,6 +64,7 @@ console.log("😂 length is " + columns!.length);
 console.log("😂 " + JSON.stringify(data));
 ---
 
+<audio id="clickSound" src="confetti.mp3" preload="auto"></audio>
 <!-- <html data-theme="dark"> --><!-- Content you want to center -->
 <Layout title="Map Columns">
   <div class="">
@@ -84,19 +85,24 @@ console.log("😂 " + JSON.stringify(data));
     <div class="">
       <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
     </div>
-    
-    <form>
-      <div class="hidden">
-        <input name="webhook" value={webhook} />
-      </div>
-      <div class="card bg-primary text-primary-content">
-        <div class="card-body">
-          <div class="join">
-            <select name="sourceColumn" class="select select-bordered join-item">
+
+    <div class="hidden">
+      <input name="webhook" value={webhook} />
+    </div>
+    <div class="card bg-primary text-primary-content">
+      <div class="card-body">
+        <div class="join">
+          <form>
+            <select
+              name="sourceColumn"
+              class="select select-bordered join-item"
+            >
               <option disabled selected>Source Column</option>
               {
                 sourceFields.map((data) => (
-                  <option id={data.id} value={data.id}>{data.title}</option>
+                  <option id={data.id} value={data.id}>
+                    {data.title}
+                  </option>
                 ))
               }
             </select>
@@ -105,23 +111,27 @@ console.log("😂 " + JSON.stringify(data));
               <option disabled selected>Destination Column</option>
               {
                 destFields.map((data) => (
-                  <option id={data.id} value={data.id}>{data.title}</option>
+                  <option id={data.id} value={data.id}>
+                    {data.title}
+                  </option>
                 ))
               }
             </select>
-            <div class="indicator">
-              <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
-              <button
-                class="btn join-item"
-                hx-post="api/htmx/htmxaddrow"
-                hx-target="#swapme"
-                hx-swap="afterend">Map Column</button
-              >
-            </div>
-          </div>
+            <!-- <div class="indicator"> -->
+            <!-- <span class="indicator-item badge badge-secondary">new</span>  -->
+            <button
+              class="btn join-item"
+              hx-post="api/htmx/htmxaddrow"
+              hx-target="#swapme"
+              hx-swap="afterend">Map Column</button
+            >
+          </form>
+          <div class="divider lg:divider-horizontal"></div>
+          <!-- </div> -->
+          <button class="btn" id="confetti">Activate</button>
         </div>
       </div>
-    </form>
+    </div>
   </div>
 
   <div class="overflow-x-auto">
@@ -185,8 +195,55 @@ console.log("😂 " + JSON.stringify(data));
   }
 </style>
 
+<script
+  src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"
+></script>
+
 <script>
   window.onload = async () => {
+    const buttons = document.querySelectorAll("#confetti");
+    buttons.forEach((button) => {
+      button.addEventListener("click", async () => {
+        clickSound.play();
+
+        var count = 200;
+        var defaults = {
+          origin: { y: 0.7 },
+        };
+
+        function fire(particleRatio, opts) {
+          confetti({
+            ...defaults,
+            ...opts,
+            particleCount: Math.floor(count * particleRatio),
+          });
+        }
+
+        fire(0.25, {
+          spread: 26,
+          startVelocity: 55,
+        });
+        fire(0.2, {
+          spread: 60,
+        });
+        fire(0.35, {
+          spread: 100,
+          decay: 0.91,
+          scalar: 0.8,
+        });
+        fire(0.1, {
+          spread: 120,
+          startVelocity: 25,
+          decay: 0.92,
+          scalar: 1.2,
+        });
+        fire(0.1, {
+          spread: 120,
+          startVelocity: 45,
+        });
+      });
+    });
+
     // console.log("window loaded");
     // const url = "/api/smartsheet/getfavsmartsheets";
     // const response = await fetch(url, {
