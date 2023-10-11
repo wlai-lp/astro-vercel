@@ -1,0 +1,50 @@
+---
+interface Props {
+  title: string;
+  body: string;
+  href: string;
+  id: number;
+}
+
+const { href, title, body, id } = Astro.props;
+---
+
+<!-- <form action="POST"> -->
+	
+<div class="card w-96 bg-primary text-primary-content" id=`delet${id}`>
+  <div class="card-body">
+    <h2 class="card-title">
+      {title}<input type="checkbox" class="toggle" checked />
+    </h2>
+    <a href={href}>
+      <p>{body}</p>
+    </a>
+    <div class="card-actions justify-end">
+      <button class="btn" name="deletme" value={id}>delete</button>
+      <button
+        name="deleteSheetMapping"
+        value={id}
+        class="btn btn-danger"
+        hx-target=`#delet${id}`
+        hx-delete="/api/htmxdeletesheetmapping"
+        hx-swap="outerHTML swap:1s"
+      >
+        Delete me
+      </button>
+    </div>
+  </div>
+</div>
+<!-- </form> -->
+
+<!-- #REF htmx swapping effect -->
+<style>
+  div.htmx-swapping {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+
+  div.content-leaving {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+  }
+</style>
