@@ -22,25 +22,75 @@ console.log(JSON.stringify(data));
 <Layout title="SmarterSheet.">
   <main>
     <h1>Welcome to <span class="text-gradient">SmarterSheet</span></h1>
+    <button class="btn" id="confetti">click</button>
+
+    <!-- http://localhost:4321/mapcolumns?source=8794326965741444&dest=598561041371012&webhook=1697541331937156 -->
 
     <ul role="list" class="link-card-grid">
-        {
-            data?.map((d) =>{
-                return <Card
-            href="/mapsheets"
-            title={d.name}
-            body="Supercharge your project with new frameworks and libraries."
-            id={d.id}
-            isEnabled={d.webhook_established!}
-        />
-            })
-        }
-        
+      {
+        data?.map((d) => {
+          return (
+            <Card
+              href="/mapsheets"
+              title={d.name}
+              body="Supercharge your project with new frameworks and libraries."
+              id={d.id}
+              isEnabled={d.webhook_established!}
+            />
+          );
+        })
+      }
     </ul>
-
   </main>
 </Layout>
 
+<script
+  src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.0/dist/confetti.browser.min.js"
+></script>
+<script>
+  const buttons = document.querySelectorAll("#confetti");
+
+  // Handle clicks on each button.
+  buttons.forEach((button) => {
+    button.addEventListener("click", async () => {
+      var count = 200;
+      var defaults = {
+        origin: { y: 0.7 },
+      };
+
+      function fire(particleRatio, opts) {
+        confetti({
+          ...defaults,
+          ...opts,
+          particleCount: Math.floor(count * particleRatio),
+        });
+      }
+
+      fire(0.25, {
+        spread: 26,
+        startVelocity: 55,
+      });
+      fire(0.2, {
+        spread: 60,
+      });
+      fire(0.35, {
+        spread: 100,
+        decay: 0.91,
+        scalar: 0.8,
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 25,
+        decay: 0.92,
+        scalar: 1.2,
+      });
+      fire(0.1, {
+        spread: 120,
+        startVelocity: 45,
+      });
+    });
+  });
+</script>
 <style>
   main {
     padding: 1rem;
