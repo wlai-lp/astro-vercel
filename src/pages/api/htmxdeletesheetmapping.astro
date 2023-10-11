@@ -1,5 +1,14 @@
 ---
 import { supabase } from "../../db/supabase";
+
+const id = (await Astro.request.formData()).get("deleteSheetMapping")
+console.log("deleteSheetMapping id " + id);
+
+const {data, error: groupError} = await supabase
+.from("ss_sheet_mappings")
+.delete()
+.eq("id", parseInt(id!.toString()))
+
 // const formData = await Astro.request.formData()
 // const id = formData.get("deleteColMapping")
 // console.log("delete column id " + id)
