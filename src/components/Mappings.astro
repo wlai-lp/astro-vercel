@@ -4,9 +4,10 @@ interface Props {
   body: string;
   href: string;
   id: number;
+  isEnabled: boolean;
 }
 
-const { href, title, body, id } = Astro.props;
+const { href, title, body, id, isEnabled } = Astro.props;
 ---
 
 <!-- <form action="POST"> -->
@@ -14,7 +15,22 @@ const { href, title, body, id } = Astro.props;
 <div class="card w-96 bg-primary text-primary-content" id=`delet${id}`>
   <div class="card-body">
     <h2 class="card-title">
-      {title}<input type="checkbox" class="toggle" checked />
+      {title}
+
+	  <!-- #REF: astro if else -->
+	  {
+		() => {
+			if(isEnabled){
+			return <input type="checkbox" class="toggle" checked />
+		} else {
+			return <input type="checkbox" class="toggle" unchecked />
+		}
+		}
+		
+	  }
+
+	 
+	  <!-- <input type="checkbox" class="toggle" checked /> -->
     </h2>
     <a href={href}>
       <p>{body}</p>
