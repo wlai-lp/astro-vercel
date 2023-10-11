@@ -22,6 +22,7 @@ console.log(JSON.stringify(data));
 <Layout title="SmarterSheet.">
   <main>
     <h1>Welcome to <span class="text-gradient">SmarterSheet</span></h1>
+    <audio id="clickSound" src="confetti.mp3" preload="auto"></audio>
     <button class="btn" id="confetti">click</button>
 
     <!-- http://localhost:4321/mapcolumns?source=8794326965741444&dest=598561041371012&webhook=1697541331937156 -->
@@ -29,9 +30,11 @@ console.log(JSON.stringify(data));
     <ul role="list" class="link-card-grid">
       {
         data?.map((d) => {
+            
+            const ref = "mapcolumns?source=" + d.source_id + "&dest=" + d.dest_id + "&webhook=" + d.webhook_id
           return (
             <Card
-              href="/mapsheets"
+              href={ref}
               title={d.name}
               body="Supercharge your project with new frameworks and libraries."
               id={d.id}
@@ -49,10 +52,13 @@ console.log(JSON.stringify(data));
 ></script>
 <script>
   const buttons = document.querySelectorAll("#confetti");
+  const clickSound = document.getElementById("clickSound");
 
   // Handle clicks on each button.
   buttons.forEach((button) => {
     button.addEventListener("click", async () => {
+      clickSound.play();
+
       var count = 200;
       var defaults = {
         origin: { y: 0.7 },

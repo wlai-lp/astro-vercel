@@ -34,9 +34,9 @@ const { href, title, body, id, isEnabled } = Astro.props;
     </h2>
     <a href={href}>
       <p>{body}</p>
+	  <div class="card-actions justify-end">
     </a>
-    <div class="card-actions justify-end">
-      <button class="btn" name="deletme" value={id}>delete</button>
+      <!-- <button class="btn" name="deletme" value={id}>delete</button> -->
       <button
         name="deleteSheetMapping"
         value={id}
