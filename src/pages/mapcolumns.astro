@@ -86,13 +86,14 @@ console.log("😂 " + JSON.stringify(data));
       <h1>Map Source Sheet {sourceName} to Destination Sheet {destName}</h1>
     </div>
 
-    <div class="hidden">
-      <input name="webhook" value={webhook} />
-    </div>
+    
     <div class="card bg-primary text-primary-content">
       <div class="card-body">
         <div class="join">
           <form>
+            <div class="hidden">
+              <input name="webhook" value={webhook} />
+            </div>
             <select
               name="sourceColumn"
               class="select select-bordered join-item"

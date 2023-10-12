@@ -81,6 +81,24 @@ export const getSheetMappingById = async (id : string ) => {
   return data;
 };
 
+export const getSheetMappingByWebhookId = async (id : string ) => {
+  console.log("🚀 getSheetMappingByWebhookId sheetmapping by id " + id)
+    const { data, error: groupError } = await supabase
+    .from("ss_sheet_mappings")
+    .select()
+    .eq("webhook_id", id)
+
+  if (!data) {
+    console.error("No data returned");
+  }
+
+  if (groupError) {
+    console.log("error " + groupError.message);
+  }
+  console.log(JSON.stringify(data));
+
+  return data;
+};
 
 // TODO: update as needed
 export const selectSheet = async (sheet: Tables<"ss_sheets">) => {
