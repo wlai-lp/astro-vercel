@@ -75,3 +75,31 @@ export async function CreateWebHook(name: string, souceSSId: string) {
   //     },
   //   });
   }
+
+  
+
+  export async function DeleteWebHook(webhookId: string) {
+    //   console.log(request.method);
+  
+    const apiUrl = import.meta.env.SS_API_ENDPOINT + "webhooks/" + webhookId ;
+  
+    const body = {
+    };
+  
+    const res = await fetch(
+      apiUrl,
+      getSsRequestOptions("DELETE", JSON.stringify(body))
+    );
+    // You can return Date, Map, Set, etc.
+  
+    if (!res.ok) {
+      // This will activate the closest `error.js` Error Boundary
+      // throw new Error('Failed to fetch data')
+      console.error("error");
+    }
+  
+    const data = await res.json();
+    console.log("🚀 webhook deleted  " + JSON.stringify(data));
+    return data;
+
+  }

@@ -42,6 +42,46 @@ export const updateSheetMappingByWebhookId = async (sheetMapping: Tables<"ss_she
   return data;
 };
 
+
+export const deleteSheetMappingById = async (id : string ) => {
+  console.log("🚀 delete sheetmapping by id " + id)
+    const { data, error: groupError } = await supabase
+    .from("ss_sheet_mappings")
+    .delete()
+    .eq("id", id)
+
+  if (!data) {
+    console.error("No data returned");
+  }
+
+  if (groupError) {
+    console.log("error " + groupError.message);
+  }
+  console.log(JSON.stringify(data));
+
+  return data;
+};
+
+export const getSheetMappingById = async (id : string ) => {
+  console.log("🚀 delete sheetmapping by id " + id)
+    const { data, error: groupError } = await supabase
+    .from("ss_sheet_mappings")
+    .select()
+    .eq("id", id)
+
+  if (!data) {
+    console.error("No data returned");
+  }
+
+  if (groupError) {
+    console.log("error " + groupError.message);
+  }
+  console.log(JSON.stringify(data));
+
+  return data;
+};
+
+
 // TODO: update as needed
 export const selectSheet = async (sheet: Tables<"ss_sheets">) => {
     console.log("selet sheets where ss_id = " + sheet.ss_id)

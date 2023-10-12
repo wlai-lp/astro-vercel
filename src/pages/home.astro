@@ -16,7 +16,24 @@ if (!data) {
 if (groupError) {
   console.log("error " + groupError.message);
 }
-console.log(JSON.stringify(data));
+
+// const columnIds = data?.map((d) => {
+//   return d.source_id + "," + d.dest_id;
+// })
+// console.log(JSON.stringify(data));
+// console.log(columnIds?.join());
+// const args = columnIds?.join().split(",")
+// console.log(args);
+// const { data, error: cgroupError } = await supabase
+//   .from("ss_columns")
+//   .select()
+//   .in("ss_id", args);
+
+// if (!data) {
+//   console.error("No data returned");
+// }
+// console.log(JSON.stringify(cdata));
+
 ---
 
 <Layout title="SmarterSheet.">
@@ -30,13 +47,16 @@ console.log(JSON.stringify(data));
     <ul role="list" class="link-card-grid">
       {
         data?.map((d) => {
-            
-            const ref = "mapcolumns?source=" + d.source_id + "&dest=" + d.dest_id + "&webhook=" + d.webhook_id
+          const ref = `mapcolumns?source=${d.source_id}&dest=${d.dest_id}&webhook=${d.webhook_id}`          
+          const sourceName = d.source_id
+          const destName = d.dest_id
           return (
             <Card
               href={ref}
               title={d.name}
-              body="Supercharge your project with new frameworks and libraries."
+              body="Supercharge your project with new frameworks and libraries." 
+              sourceName={sourceName}
+              destName={destName}             
               id={d.id}
               isEnabled={d.webhook_established!}
             />
