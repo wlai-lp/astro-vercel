@@ -1,0 +1,48 @@
+---
+import { updateSheetMappingByWebhookId } from "../../db/ss_sheet_mappings";
+import type { Tables } from "../../db/types";
+import { EnableWebHook } from "../api/smartsheet/createWebhook";
+const formData = await Astro.request.formData();
+const id = formData.get("webhook");
+console.log("webhook id is " + id);
+
+const webhookId = id!.toString();
+const result = await EnableWebHook(webhookId, true);
+const sheetMapping: Tables<"ss_sheet_mappings"> = {
+  webhook_established: true,
+  webhook_id: webhookId,
+};
+const dbResult = await updateSheetMappingByWebhookId(sheetMapping);
+
+// const { data, error: groupError } = await supabase
+//   .from("ss_column_mappings")
+//   .delete()
+//   .eq("id", parseInt(id!.toString()))
+
+//   if (!data) {
+//       console.error("No data returned");
+//     }
+
+//     if (groupError) {
+//       console.log("error " + groupError.message);
+//     }
+//     console.log(JSON.stringify(data));
+
+// submit a webhook activate request
+
+// update db and set the activation to activate
+
+const returnButton = `<button
+            class="btn btn-success btn-disabled"
+            id="confetti"
+            name="webhook"
+            value={webhook}
+            >Activated</button
+          >`;
+
+return new Response(returnButton, {
+  status: 200,
+});
+---
+
+<!-- <h1 HX-Redirect="www.google.com">htmx is awesome {payload}</h1> -->

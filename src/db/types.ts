@@ -130,6 +130,9 @@ export interface Database {
           user_id: number | null
           webhook_established: boolean | null
           webhook_id: string | null
+        } | {
+          webhook_established: boolean | null
+          webhook_id: string | null
         }
         Insert: {
           created_at?: string

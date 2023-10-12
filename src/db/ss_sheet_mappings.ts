@@ -22,6 +22,25 @@ export const addSheetMapping = async (sheetMapping: Database['public']['Tables']
   return data;
 };
 
+export const updateSheetMappingByWebhookId = async (sheetMapping: Tables<"ss_sheet_mappings"> ) => {
+  console.log("🚀 add sheetmapping")
+    const { data, error: groupError } = await supabase
+    .from("ss_sheet_mappings")
+    .update(sheetMapping)
+    .eq("webhook_id", sheetMapping.webhook_id!)
+    .select();
+
+  if (!data) {
+    console.error("No data returned");
+  }
+
+  if (groupError) {
+    console.log("error " + groupError.message);
+  }
+  console.log(JSON.stringify(data));
+
+  return data;
+};
 
 // TODO: update as needed
 export const selectSheet = async (sheet: Tables<"ss_sheets">) => {

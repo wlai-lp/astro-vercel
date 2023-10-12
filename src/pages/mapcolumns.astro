@@ -128,7 +128,14 @@ console.log("😂 " + JSON.stringify(data));
           </form>
           <div class="divider lg:divider-horizontal"></div>
           <!-- </div> -->
-          <button class="btn" id="confetti">Activate</button>
+          <button
+            class="btn btn-info"
+            id="confetti"
+            name="webhook"
+            value={webhook}
+            hx-swap="outerHTML"
+            hx-post="/api/htmxactivatewebhook">Activate</button
+          >
         </div>
       </div>
     </div>
@@ -159,7 +166,7 @@ console.log("😂 " + JSON.stringify(data));
                   <button
                     name="deleteColMapping"
                     value={col.colId}
-                    class="btn btn-danger"
+                    class="btn btn-warning"
                     hx-delete="/api/htmxdeletecolumn"
                   >
                     Delete
