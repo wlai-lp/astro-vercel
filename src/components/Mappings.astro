@@ -11,43 +11,38 @@ const { href, title, body, id, isEnabled } = Astro.props;
 ---
 
 <!-- <form action="POST"> -->
-	
 <div class="card w-96 bg-primary text-primary-content" id=`delet${id}`>
   <div class="card-body">
-    <h2 class="card-title">
-      {title}
+    <h2 class="card-title">      
 
-	  <!-- #REF: astro if else -->
-	  {
-		() => {
-			if(isEnabled){
-			return <input type="checkbox" class="toggle" checked />
-		} else {
-			return <input type="checkbox" class="toggle" unchecked />
-		}
-		}
-		
-	  }
-
-	 
-	  <!-- <input type="checkbox" class="toggle" checked /> -->
+      <!-- #REF: astro if else -->
+      {
+        () => {
+          if (isEnabled) {
+            return <input type="checkbox" class="toggle" checked />;
+          } else {
+            return <input type="checkbox" class="toggle" unchecked />;
+          }
+        }
+      }
+{title}
+      <!-- <input type="checkbox" class="toggle" checked /> -->
     </h2>
     <a href={href}>
       <p>{body}</p>
-	  <div class="card-actions justify-end">
     </a>
-      <!-- <button class="btn" name="deletme" value={id}>delete</button> -->
-      <button
-        name="deleteSheetMapping"
-        value={id}
-        class="btn btn-danger"
-        hx-target=`#delet${id}`
-        hx-delete="/api/htmxdeletesheetmapping"
-        hx-swap="outerHTML swap:1s"
-      >
-        Delete me
-      </button>
-    </div>
+    <div class="card-actions justify-end"></div>
+    <!-- <button class="btn" name="deletme" value={id}>delete</button> -->
+    <button
+      name="deleteSheetMapping"
+      value={id}
+      class="btn btn-danger"
+      hx-target=`#delet${id}`
+      hx-delete="/api/htmxdeletesheetmapping"
+      hx-swap="outerHTML swap:1s"
+    >
+      Delete me
+    </button>
   </div>
 </div>
 <!-- </form> -->
