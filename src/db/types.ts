@@ -133,6 +133,7 @@ export interface Database {
         } | {
           webhook_established: boolean | null
           webhook_id: string | null
+          source_trigger_column_id: string
         }
         Insert: {
           created_at?: string
