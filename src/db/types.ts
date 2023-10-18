@@ -329,6 +329,21 @@ export interface Database {
         }
         Returns: string
       }
+      get_mappings_by_user: {
+        Args: {
+          userid: string
+        }
+        Returns: {
+          id: number
+          name: string
+          source_id: string
+          source_name: string
+          dest_id: string
+          dest_name: string
+          webhook_id: string
+          webhook_established: boolean
+        }[]
+      }
       hello_world: {
         Args: Record<PropertyKey, never>
         Returns: string

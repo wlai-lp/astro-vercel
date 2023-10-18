@@ -1,0 +1,99 @@
+---
+// import Layout from "../layouts/Layout.astro";
+import SmarterLayout from "../layouts/SmarterLayout.astro";
+import Card from "../components/Mappings.astro";
+import { supabase } from "../db/supabase";
+import { GetSheetNameByID } from "./api/vercelkv"
+
+
+let { data, error: groupError } = await supabase.rpc("get_mappings_by_user", {
+    userid: "10"
+  });
+
+// TODO: need to get the login user id
+// const { data, error: groupError } = await supabase
+//   .from("ss_sheet_mappings")
+//   .select()
+//   .eq("user_id", 10);
+
+if (!data) {
+  console.error("No data returned");
+}
+
+if (groupError) {
+  console.log("error " + groupError.message);
+}
+
+console.log(data?.length)
+console.log("🚀" + JSON.stringify(data))
+
+---
+
+<SmarterLayout title="SmarterSheet.">
+  <main class="max-w-full h-full flex relative overflow-y-hidden">
+    <!-- Container -->
+    <div
+      class="h-full w-full m-4 flex flex-wrap items-start justify-start rounded-tl grid-flow-col auto-cols-max gap-4"
+    >
+      <!-- Container -->
+
+      {
+        data?.map((d) => {
+          const ref = `mapcolumns?source=${d.source_id}&dest=${d.dest_id}&webhook=${d.webhook_id}`          
+          const sourceName = d.source_name
+          const destName = d.dest_name
+          return (
+            <Card
+              href={ref}
+              title={d.name}
+              body="Supercharge your project with new frameworks and libraries." 
+              sourceName={sourceName!}
+              destName={destName!}             
+              id={d.id}
+              isEnabled={d.webhook_established!}
+            />
+          );
+        })
+      }
+
+      <!-- {
+        data?.map((d) => {
+          console.log("server render");
+          console.log(JSON.stringify(d));
+          console.log(d.dest_id);
+          return (
+            <div class="card w-96 bg-primary text-primary-content">
+              <div class="card-body">
+                <h2 class="card-title">{d.name}</h2>
+                <p>Map {d.source_id} <br>to {d.dest_id}</p>
+                <div class="card-actions justify-end">
+                  <button class="btn">Delete</button>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      } -->
+
+      <!-- <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400">
+        <div class="card w-96 bg-primary text-primary-content">
+          <div class="card-body">
+            <h2 class="card-title">Card title!</h2>
+            <p>If a dog chews shoes whose shoes does he choose?</p>
+            <div class="card-actions justify-end">
+              <button class="btn">Buy Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div>
+      <div class="w-96 h-60 rounded-lg flex-shrink-0 flex-grow bg-gray-400"></div> -->
+    </div>
+  </main>
+</SmarterLayout>

@@ -1,0 +1,49 @@
+---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content="Astro description" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content="{Astro.generator}" />
+    <script
+      src="https://unpkg.com/htmx.org@1.9.6"
+      integrity="sha384-FhXw7b6AlE/jyjlZH5iHa/tTe9EpJ1Y55RjcgPbjeWMskSxZt1v9qkxLJWNJaGni"
+      crossorigin="anonymous"></script>
+    <title>{title}</title>
+  </head>
+  <body>
+    <nav class="bg-blue-500 p-4">
+      <div class="flex justify-between items-center">
+        <!-- Left side elements -->
+        <div class="px-8">
+          <a href="/home" class="text-white font-bold text-lg">SmartSync</a>
+        </div>
+
+        <!-- Right side elements -->
+        <div class="px-8">
+          <a href="/mapsheets">
+            <button class="btn mr-4"> New Mapping</button>
+          </a>
+          <a href="#" class="text-white mr-4">Home</a>
+          <a href="#" class="text-white mr-4">About</a>
+          <a href="#" class="text-white">Contact</a>
+        </div>
+      </div>
+    </nav>
+    <!--  <div class="flex justify-center items-center"> -->
+    <div
+      class="h-full w-full m-4 flex flex-wrap items-start justify-start rounded-tl grid-flow-col auto-cols-max gap-4"
+    >
+      <slot />
+    </div>
+  </body>
+</html>

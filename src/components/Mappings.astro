@@ -32,30 +32,32 @@ const { href, title, body, sourceName, destName, id, isEnabled } = Astro.props;
     </h2>
     <a href={href}>
       <p>
-
         <div class="chat chat-start">
-          <div class="chat-bubble chat-bubble-accent">Mapped source sheet <span class="font-semibold">{sourceName}</span></div>
+          <div class="chat-bubble chat-bubble-accent">
+            Mapped source sheet <span class="font-semibold">{sourceName}</span>
+          </div>
         </div>
         <div class="chat chat-end">
-          <div class="chat-bubble chat-bubble-info">to destination sheet <span class="font-semibold">{destName}</span></div>
+          <div class="chat-bubble chat-bubble-info">
+            to destination sheet <span class="font-semibold">{destName}</span>
+          </div>
         </div>
-
       </p>
     </a>
     <div class="card-actions justify-end">
-    <button class="btn">Edit</button>
+      <a href={href}><button class="btn">Edit</button></a>
 
-    <button
-      name="deleteSheetMapping"
-      value={id}
-      class="btn btn-error"
-      hx-target=`#delet${id}`
-      hx-delete="/api/htmxdeletesheetmapping"
-      hx-swap="outerHTML swap:1s"
-    >
-      Delete me
-    </button>
-  </div>
+      <button
+        name="deleteSheetMapping"
+        value={id}
+        class="btn btn-error"
+        hx-target=`#delet${id}`
+        hx-delete="/api/htmxdeletesheetmapping"
+        hx-swap="outerHTML swap:1s"
+      >
+        Delete me
+      </button>
+    </div>
   </div>
 </div>
 <!-- </form> -->
